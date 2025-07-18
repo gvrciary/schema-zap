@@ -1,16 +1,13 @@
-import { darkMode } from '$lib/stores/ui';
-import { canvasState } from '$lib/stores/app';
-import { get } from 'svelte/store';
+import type { CanvasState } from '$lib/types';
 
-export function getGridPattern(): Partial<CSSStyleDeclaration> {
-	const canvas = get(canvasState);
+export function getBackground(canvas: CanvasState, darkMode: boolean): Partial<CSSStyleDeclaration> {
 	const gridSize = 40;
 	const scaledGridSize = gridSize * canvas.zoom;
 	const offsetX = canvas.panX % scaledGridSize;
 	const offsetY = canvas.panY % scaledGridSize;
 
 	const dotSize = Math.max(1, Math.min(3, canvas.zoom * 1.5));
-	const gridColor = get(darkMode) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+	const gridColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
 	return {
 		backgroundImage: `radial-gradient(circle, ${gridColor} ${dotSize}px, transparent ${dotSize}px)`,
@@ -18,3 +15,13 @@ export function getGridPattern(): Partial<CSSStyleDeclaration> {
 		backgroundPosition: `${offsetX}px ${offsetY}px`
 	};
 }
+
+export function cssObjectToString(style: Partial<CSSStyleDeclaration>): string {
+	return Object.entries(style)
+		.map(([key, value]) => {
+			const kebab = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+			return `${kebab}: ${value};`;
+		})
+		.join(' ');
+}
+

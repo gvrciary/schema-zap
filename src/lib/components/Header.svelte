@@ -3,31 +3,16 @@
 	import { schema, canvasState } from '$lib/stores/app';
 	import { showSidebar, lastParseTime, darkMode } from '$lib/stores/ui';
 	import { toPng } from 'html-to-image';
+	import { getBackground } from '$lib/utils/background';
 
-	function getGridPattern(): Partial<CSSStyleDeclaration> {
-		const gridSize = 40;
-		const scaledGridSize = gridSize * $canvasState.zoom;
-		const offsetX = $canvasState.panX % scaledGridSize;
-		const offsetY = $canvasState.panY % scaledGridSize;
-
-		const dotSize = Math.max(1, Math.min(3, $canvasState.zoom * 1.5));
-		const gridColor = $darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-
-		return {
-			backgroundImage: `radial-gradient(circle, ${gridColor} ${dotSize}px, transparent ${dotSize}px)`,
-			backgroundSize: `${scaledGridSize}px ${scaledGridSize}px`,
-			backgroundPosition: `${offsetX}px ${offsetY}px`
-		};
-	}
-
-	async function exportSchema() {
+	async function exportSchema(): Promise<void> {
 		const canvas = document.querySelector('.canvas-container') as unknown as HTMLElement;
 
 		if (!canvas) return;
 
 		await document.fonts.ready;
 
-		const background = getGridPattern();
+		const background = getBackground($canvasState, $darkMode);
 
 		const date = new Date();
 
@@ -40,13 +25,13 @@
 				}
 			});
 			const link = document.createElement('a');
-			const pad = (n: number) => n.toString().padStart(2, '0');
+			const pad = (n: number): string => n.toString().padStart(2, '0');
 			const formattedDate = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}_${pad(date.getHours())}-${pad(date.getMinutes())}-${pad(date.getSeconds())}`;
 			link.download = `diagram-${formattedDate}.png`;
 			link.href = dataUrl;
 			link.click();
 		} catch (error) {
-			console.error('Error al generar la imagen:', error);
+			console.error('Error generating image:', error);
 		}
 	}
 

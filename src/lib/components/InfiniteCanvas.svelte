@@ -5,12 +5,13 @@
 	import RelationshipConnector from './RelationshipConnector.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { type Snippet } from 'svelte';
+	import { cssObjectToString, getBackground } from '$lib/utils/background';
 
 	interface Props {
 		children?: Snippet<[{ table: Table; transform: string }]>;
 	}
 
-	let { children }: Props = $props();
+	const { children }: Props = $props();
 
 	let canvasElement: HTMLDivElement;
 	let isDragging = $state(false);
@@ -42,7 +43,7 @@
 		}
 	});
 
-	function handleTableMove(tableName: string, newPosition: { x: number; y: number }) {
+	function handleTableMove(tableName: string, newPosition: { x: number; y: number }): void {
 		const tableIndex = $schema.tables.findIndex((t) => t.name === tableName);
 		if (tableIndex >= 0) {
 			$schema.tables[tableIndex].position = newPosition;
@@ -50,30 +51,30 @@
 		}
 	}
 
-	function handleCanvasUpdate(updates: Partial<CanvasState>) {
+	function handleCanvasUpdate(updates: Partial<CanvasState>): void {
 		canvasState.set({ ...$canvasState, ...updates });
 	}
 
-	function handleTableSelect(tableName: string | undefined) {
+	function handleTableSelect(tableName: string | undefined): void {
 		canvasState.update((state) => {
 			return { ...state, selectedTable: tableName };
 		});
 	}
 
-	function screenToCanvas(screenX: number, screenY: number) {
+	function screenToCanvas(screenX: number, screenY: number): { x: number; y: number } {
 		const rect = canvasElement.getBoundingClientRect();
 		const canvasX = (screenX - rect.left - $canvasState.panX) / $canvasState.zoom;
 		const canvasY = (screenY - rect.top - $canvasState.panY) / $canvasState.zoom;
 		return { x: canvasX, y: canvasY };
 	}
 
-	function canvasToScreen(canvasX: number, canvasY: number) {
+	function canvasToScreen(canvasX: number, canvasY: number): { x: number; y: number } {
 		const screenX = canvasX * $canvasState.zoom + $canvasState.panX;
 		const screenY = canvasY * $canvasState.zoom + $canvasState.panY;
 		return { x: screenX, y: screenY };
 	}
 
-	function handleWheel(event: WheelEvent) {
+	function handleWheel(event: WheelEvent): void {
 		event.preventDefault();
 
 		const rect = canvasElement.getBoundingClientRect();
@@ -93,7 +94,7 @@
 		});
 	}
 
-	function handleMouseDown(event: MouseEvent) {
+	function handleMouseDown(event: MouseEvent): void {
 		if (event.button !== 0) return;
 
 		const target = event.target as HTMLElement;
@@ -123,7 +124,7 @@
 		}
 	}
 
-	function handleMouseMove(event: MouseEvent) {
+	function handleMouseMove(event: MouseEvent): void {
 		if (isTableDragging && draggedTable) {
 			const mouseCanvas = screenToCanvas(event.clientX, event.clientY);
 			const newPosition = {
@@ -145,14 +146,14 @@
 		}
 	}
 
-	function handleMouseUp() {
+	function handleMouseUp(): void {
 		isDragging = false;
 		isTableDragging = false;
 		draggedTable = null;
 		handleCanvasUpdate({ draggedTable: undefined });
 	}
 
-	function handleTouchStart(event: TouchEvent) {
+	function handleTouchStart(event: TouchEvent): void {
 		const target = event.target as HTMLElement;
 		if (!canvasElement?.contains(target)) return;
 
@@ -199,7 +200,7 @@
 		}
 	}
 
-	function handleTouchMove(event: TouchEvent) {
+	function handleTouchMove(event: TouchEvent): void {
 		if (!isDragging && !isTableDragging && !isTouchPinching) return;
 
 		event.preventDefault();
@@ -251,7 +252,7 @@
 		}
 	}
 
-	function handleTouchEnd(event: TouchEvent) {
+	function handleTouchEnd(event: TouchEvent): void {
 		if (!isDragging && !isTableDragging && !isTouchPinching) return;
 
 		event.preventDefault();
@@ -271,7 +272,7 @@
 		}
 	}
 
-	function handleKeyDown(event: KeyboardEvent) {
+	function handleKeyDown(event: KeyboardEvent) : void {
 		if (event.ctrlKey || event.metaKey) {
 			switch (event.key) {
 				case '0':
@@ -304,32 +305,13 @@
 		return `translate(${screenPos.x}px, ${screenPos.y}px) scale(${$canvasState.zoom})`;
 	}
 
-	function getGridPattern(): string {
-		const gridSize = 40;
-		const scaledGridSize = gridSize * $canvasState.zoom;
-		const offsetX = $canvasState.panX % scaledGridSize;
-		const offsetY = $canvasState.panY % scaledGridSize;
-
-		const dotSize = Math.max(1, Math.min(3, $canvasState.zoom * 1.5));
-		const gridColor = $darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-
-		return `
-			background-image:
-				radial-gradient(circle, ${gridColor} ${dotSize}px, transparent ${dotSize}px);
-			background-size: ${scaledGridSize}px ${scaledGridSize}px;
-			background-position: ${offsetX}px ${offsetY}px;
-		`;
-	}
-
-	function getSchemaSummary() {
+	function getSchemaSummary(): { tableCount: number; columnCount: number; relationshipCount: number } {
 		const tableCount = $schema.tables.length;
 		const columnCount = $schema.tables.reduce((sum, table) => sum + table.columns.length, 0);
 		const relationshipCount = $schema.relationships.length;
 
 		return { tableCount, columnCount, relationshipCount };
 	}
-
-	let summary = $derived(getSchemaSummary());
 
 	function getTouchDistance(touches: TouchList): number {
 		if (touches.length < 2) return 0;
@@ -351,6 +333,9 @@
 			y: (touch1.clientY + touch2.clientY) / 2
 		};
 	}
+	
+	const background = $derived(cssObjectToString(getBackground($canvasState, $darkMode)));
+	const summary = $derived(getSchemaSummary());
 </script>
 
 <svelte:window
@@ -372,7 +357,7 @@
 	onmousedown={handleMouseDown}
 	role="application"
 	aria-label="Database schema canvas"
-	style={getGridPattern()}
+	style={background}
 >
 	{#each $schema.tables as table, index (index)}
 		<div
