@@ -1,20 +1,9 @@
 <script lang="ts">
-	import '../app.css';
-	import { darkMode } from '$lib/stores/ui';
+	import '$lib/styles/app.css';
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { darkMode } from '$lib/stores/ui';
 
-	let { children } = $props();
-
-	onMount(() => {
-		if (browser) {
-			const stored = localStorage.getItem('darkMode');
-			const isDark = stored === 'true';
-
-			document.documentElement.classList.toggle('dark', isDark);
-			darkMode.set(isDark);
-		}
-	});
+	const { children } = $props();
 
 	$effect(() => {
 		if (browser) {
