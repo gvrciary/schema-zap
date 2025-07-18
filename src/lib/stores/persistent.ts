@@ -6,7 +6,7 @@ export function createPersistentToggle(key: string, defaultValue = false) {
 
 	const { subscribe, set, update } = writable(initialValue);
 
-	function persist(value: boolean) {
+	function persist(value: boolean): void {
 		if (browser) localStorage.setItem(key, value.toString());
 		set(value);
 	}

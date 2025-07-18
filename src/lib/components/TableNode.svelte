@@ -31,12 +31,12 @@
 		table: Table;
 	}
 
-	let { table }: Props = $props();
+	const { table }: Props = $props();
 
 	let box: HTMLDivElement;
 
-	let isSelected = $derived($canvasState.selectedTable === table.name);
-	let isDragging = $derived($canvasState.draggedTable === table.name);
+	const isSelected = $derived($canvasState.selectedTable === table.name);
+	const isDragging = $derived($canvasState.draggedTable === table.name);
 
 	function getColumnTypeIcon(column: Column) {
 		const type = column.type.toLowerCase();

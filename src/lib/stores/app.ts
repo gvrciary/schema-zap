@@ -14,10 +14,10 @@ export const canvasState: Writable<CanvasState> = writable({
 	draggedTable: undefined
 });
 
-function createSqlInputStore() {
+function createSqlInputStore(): Writable<string> {
 	let currentDialect = get(selectedDialect);
 
-	const getKey = (dialect: SQLDialect) => `sqlInput:${dialect.toLowerCase()}`;
+	const getKey = (dialect: SQLDialect): string => `sqlInput:${dialect.toLowerCase()}`;
 
 	const storedInitialValue = browser ? localStorage.getItem(getKey(currentDialect)) : null;
 	const initialValue = browser

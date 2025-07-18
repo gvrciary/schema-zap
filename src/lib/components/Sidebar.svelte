@@ -6,7 +6,7 @@
 
 	let activeTab = $state('sql');
 
-	function setActiveTab(tab: string) {
+	function setActiveTab(tab: string): void {
 		activeTab = tab;
 	}
 </script>

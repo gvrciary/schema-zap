@@ -13,7 +13,7 @@
 		Trash2
 	} from 'lucide-svelte';
 	import { sqlInput, selectedDialect } from '$lib/stores/app';
-	import { handleParseSQL } from '$lib/services';
+	import { handleParseSQL } from '$lib/utils/sqlHandler';
 	import { hasMounted } from '$lib/stores/ui';
 
 	onMount(() => {
@@ -45,7 +45,7 @@
 	let isValidSQL = $state(false);
 	let errorStatementIndex = $state(-1);
 
-	let SQL_TYPES = $derived(SQL_DATA_TYPES[$selectedDialect] || []);
+	const SQL_TYPES = $derived(SQL_DATA_TYPES[$selectedDialect] || []);
 
 	function highlightSQL(code: string): string {
 		if (!code) return '';
@@ -243,14 +243,14 @@
 		return tokens;
 	}
 
-	function syncScroll() {
+	function syncScroll(): void {
 		if (textareaElement && codeElement) {
 			codeElement.scrollTop = textareaElement.scrollTop;
 			codeElement.scrollLeft = textareaElement.scrollLeft;
 		}
 	}
 
-	function syncContent() {
+	function syncContent(): void {
 		if (codeElement) {
 			const codeTag = codeElement.querySelector('code');
 			if (codeTag) {
@@ -265,7 +265,7 @@
 		syncContent();
 	});
 
-	function onDialectChange(dialect: SQLDialect) {
+	function onDialectChange(dialect: SQLDialect): void {
 		selectedDialect.set(dialect);
 		handleParse(true, true);
 	}
@@ -288,21 +288,21 @@
 		}
 	}
 
-	function handleDialectSelect(dialect: SQLDialect) {
+	function handleDialectSelect(dialect: SQLDialect): void {
 		isOpen = false;
 		if (dialect !== $selectedDialect) {
 			onDialectChange(dialect);
 		}
 	}
 
-	function handleClickOutside(event: MouseEvent) {
+	function handleClickOutside(event: MouseEvent): void {
 		const target = event.target as HTMLElement;
 		if (!target.closest('.dialect-selector')) {
 			isOpen = false;
 		}
 	}
 
-	function handleKeyDownSelector(event: KeyboardEvent) {
+	function handleKeyDownSelector(event: KeyboardEvent): void {
 		switch (event.key) {
 			case 'Enter':
 			case ' ':
@@ -327,7 +327,7 @@
 		}
 	}
 
-	function handleOptionKeyDown(event: KeyboardEvent, dialect: SQLDialect) {
+	function handleOptionKeyDown(event: KeyboardEvent, dialect: SQLDialect): void {
 		switch (event.key) {
 			case 'Enter':
 			case ' ':
@@ -337,7 +337,7 @@
 		}
 	}
 
-	function handleInputChange(event: Event) {
+	function handleInputChange(event: Event): void {
 		const target = event.target as HTMLTextAreaElement;
 		const newValue = target.value;
 
@@ -348,7 +348,7 @@
 		handleSQLChange(newValue);
 	}
 
-	function handleParse(resetZoom: boolean = false, resetPosition: boolean = false) {
+	function handleParse(resetZoom: boolean = false, resetPosition: boolean = false): void {
 		if (isCopied) isCopied = false;
 		const result = handleParseSQL(resetZoom, resetPosition);
 
@@ -356,21 +356,21 @@
 		else setError(result.error || 'Failed to parse SQL', (result.statementIndex ?? 0) - 1);
 	}
 
-	function setError(message: string, statementIndex: number = -1) {
+	function setError(message: string, statementIndex: number = -1): void {
 		isParsingError = true;
 		errorMessage = message;
 		errorStatementIndex = statementIndex;
 		isValidSQL = false;
 	}
 
-	function clearError() {
+	function clearError(): void {
 		isParsingError = false;
 		errorMessage = '';
 		errorStatementIndex = -1;
 		isValidSQL = true;
 	}
 
-	function handleKeyDown(event: KeyboardEvent) {
+	function handleKeyDown(event: KeyboardEvent): void {
 		if (event.ctrlKey || event.metaKey) {
 			switch (event.key) {
 				case 'Enter':
@@ -396,7 +396,7 @@
 		}
 	}
 
-	async function copyToClipboard() {
+	async function copyToClipboard(): Promise<void> {
 		try {
 			await navigator.clipboard.writeText($sqlInput);
 			isCopied = true;
@@ -408,7 +408,7 @@
 		}
 	}
 
-	function clearInput() {
+	function clearInput(): void {
 		handleSQLChange('');
 		isParsingError = false;
 		errorMessage = '';
@@ -417,7 +417,7 @@
 		textareaElement.focus();
 	}
 
-	function loadSample() {
+	function loadSample(): void {
 		const sampleSQL = SQL_EXAMPLES[$selectedDialect] || '';
 		handleSQLChange(sampleSQL, true, true);
 		clearError();

@@ -2,7 +2,7 @@
 	import { sqlInput, selectedDialect, schema } from '$lib/stores/app';
 	import { SQLDialect, type Table, type Column } from '$lib/types';
 	import { SQL_DATA_TYPES, REQUIRED_LENGTH_TYPES, OPTIONAL_LENGTH_TYPES } from '$lib/constants';
-	import { handleParseSQL } from '$lib/services';
+	import { handleParseSQL } from '$lib/utils/sqlHandler';
 	import {
 		Plus,
 		Trash2,
@@ -17,9 +17,8 @@
 	let visualTables: Table[] = $state([]);
 	let expandedTables: Set<string> = $state(new Set());
 	let selectedTable: string | null = $state(null);
-	let SQL_TYPES = $derived(SQL_DATA_TYPES[$selectedDialect] || []);
-
-	let dragState = $state({
+	const SQL_TYPES = $derived(SQL_DATA_TYPES[$selectedDialect] );
+	const dragState = $state({
 		isDragging: false,
 		dragType: '' as 'table' | 'column' | '',
 		dragIndex: -1,
@@ -28,7 +27,6 @@
 		dropIndex: -1,
 		dropTableName: ''
 	});
-
 	let newTableName = $state('');
 	let showNewTableForm = $state(false);
 
@@ -97,7 +95,7 @@
 		return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name);
 	}
 
-	function handleTableDragStart(event: DragEvent, tableIndex: number) {
+	function handleTableDragStart(event: DragEvent, tableIndex: number): void {
 		if (!event.dataTransfer) return;
 
 		dragState.isDragging = true;
@@ -109,7 +107,7 @@
 		event.dataTransfer.setData('text/plain', '');
 	}
 
-	function handleTableDragOver(event: DragEvent, targetIndex: number) {
+	function handleTableDragOver(event: DragEvent, targetIndex: number): void {
 		if (dragState.dragType !== 'table') return;
 
 		event.preventDefault();
@@ -117,7 +115,7 @@
 		dragState.dropIndex = targetIndex;
 	}
 
-	function handleTableDrop(event: DragEvent, targetIndex: number) {
+	function handleTableDrop(event: DragEvent, targetIndex: number): void {
 		if (dragState.dragType !== 'table') return;
 
 		event.preventDefault();
@@ -137,7 +135,7 @@
 		resetDragState();
 	}
 
-	function handleColumnDragStart(event: DragEvent, tableName: string, columnIndex: number) {
+	function handleColumnDragStart(event: DragEvent, tableName: string, columnIndex: number): void {
 		if (!event.dataTransfer) return;
 
 		const table = visualTables.find((t) => t.name === tableName);
@@ -153,7 +151,7 @@
 		event.dataTransfer.setData('text/plain', '');
 	}
 
-	function handleColumnDragOver(event: DragEvent, tableName: string, targetIndex: number) {
+	function handleColumnDragOver(event: DragEvent, tableName: string, targetIndex: number): void {
 		if (dragState.dragType !== 'column' || dragState.dragTableName !== tableName) return;
 
 		event.preventDefault();
@@ -162,7 +160,7 @@
 		dragState.dropTableName = tableName;
 	}
 
-	function handleColumnDrop(event: DragEvent, tableName: string, targetIndex: number) {
+	function handleColumnDrop(event: DragEvent, tableName: string, targetIndex: number): void {
 		if (dragState.dragType !== 'column' || dragState.dragTableName !== tableName) return;
 
 		event.preventDefault();
@@ -194,7 +192,7 @@
 		resetDragState();
 	}
 
-	function resetDragState() {
+	function resetDragState(): void {
 		dragState.isDragging = false;
 		dragState.dragType = '';
 		dragState.dragIndex = -1;
@@ -204,7 +202,7 @@
 		dragState.dropTableName = '';
 	}
 
-	function handleDragEnd() {
+	function handleDragEnd(): void {
 		resetDragState();
 	}
 
@@ -309,7 +307,7 @@
 		return result.success;
 	}
 
-	function addTable() {
+	function addTable(): void {
 		if (!newTableName.trim()) return;
 
 		const newTable: Table = {
@@ -337,7 +335,7 @@
 		updateSQLAndSchema(true, false);
 	}
 
-	function editTable(tableName: string) {
+	function editTable(tableName: string): void {
 		editTableForm = {
 			originalName: tableName,
 			name: tableName,
@@ -345,7 +343,7 @@
 		};
 	}
 
-	function saveTableChanges() {
+	function saveTableChanges(): void {
 		if (!editTableForm.name.trim() || editTableForm.name === editTableForm.originalName) {
 			editTableForm.isVisible = false;
 			return;
@@ -369,7 +367,7 @@
 		updateSQLAndSchema();
 	}
 
-	function removeTable(tableName: string) {
+	function removeTable(tableName: string): void {
 		visualTables = visualTables.filter((t) => t.name !== tableName);
 		const newExpanded = new Set(expandedTables);
 		newExpanded.delete(tableName);
@@ -390,7 +388,7 @@
 		updateSQLAndSchema();
 	}
 
-	function initNewColumnForm(tableName: string) {
+	function initNewColumnForm(tableName: string): void {
 		columnForm = {
 			isEdit: false,
 			originalName: '',
@@ -423,7 +421,7 @@
 		return { baseType: fullType.toUpperCase(), length: undefined };
 	}
 
-	function initEditColumnForm(tableName: string, column: Column) {
+	function initEditColumnForm(tableName: string, column: Column): void {
 		const { baseType, length } = extractTypeAndLength(column.type);
 
 		columnForm = {
@@ -443,7 +441,7 @@
 		showColumnForm = true;
 	}
 
-	function saveColumn() {
+	function saveColumn(): void {
 		if (!columnForm.name.trim() || !columnForm.type) return;
 
 		if (requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0)) {
@@ -494,7 +492,7 @@
 		updateSQLAndSchema();
 	}
 
-	function removeColumn(tableName: string, columnName: string) {
+	function removeColumn(tableName: string, columnName: string): void {
 		const tableIndex = visualTables.findIndex((t) => t.name === tableName);
 		if (tableIndex === -1) return;
 
@@ -514,7 +512,7 @@
 		updateSQLAndSchema();
 	}
 
-	function toggleTableExpansion(tableName: string) {
+	function toggleTableExpansion(tableName: string): void {
 		const newExpanded = new Set(expandedTables);
 		if (newExpanded.has(tableName)) {
 			newExpanded.delete(tableName);
@@ -567,7 +565,7 @@
 		return compatibleKeys;
 	}
 
-	function clearAll() {
+	function clearAll(): void {
 		visualTables = [];
 		expandedTables = new Set();
 		selectedTable = null;
