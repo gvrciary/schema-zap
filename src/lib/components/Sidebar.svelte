@@ -22,7 +22,7 @@
 				<nav class="flex">
 					<button
 						type="button"
-						class="flex-1 border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150 cursor-pointer {activeTab ===
+						class="flex-1 cursor-pointer border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150 {activeTab ===
 						'sql'
 							? 'border-white bg-white text-gray-600 dark:bg-[#111111] dark:text-white'
 							: 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#111] dark:hover:text-gray-300'}"
@@ -35,7 +35,7 @@
 					</button>
 					<button
 						type="button"
-						class="flex-1 border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150 cursor-pointer {activeTab ===
+						class="flex-1 cursor-pointer border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150 {activeTab ===
 						'visual'
 							? 'border-white bg-white text-gray-600 dark:bg-[#111111] dark:text-white'
 							: 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#111] dark:hover:text-gray-300'}"
@@ -51,11 +51,11 @@
 
 			<div class="flex-1 overflow-hidden">
 				{#if activeTab === 'sql'}
-					<div class="h-full p-4 bg-white/90 dark:bg-[#111111]">
+					<div class="h-full bg-white/90 p-4 dark:bg-[#111111]">
 						<SQLQueryInput />
 					</div>
 				{:else if activeTab === 'visual'}
-					<div class="h-full p-4 bg-white/90 dark:bg-[#111111]">
+					<div class="h-full bg-white/90 p-4 dark:bg-[#111111]">
 						<SQLSchemaEditor />
 					</div>
 				{/if}

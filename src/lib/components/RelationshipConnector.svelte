@@ -6,7 +6,9 @@
 		return document.querySelector(`#table-${tableName.toLowerCase()}`);
 	}
 
-	function getTableBounds(tableName: string) {
+	function getTableBounds(
+		tableName: string
+	): { x: number; y: number; width: number; height: number } | null {
 		const element = getTableElement(tableName);
 		if (!element) return null;
 
@@ -117,11 +119,16 @@
 	}
 
 	function renderManyToManyRelationship(
-		relationship: any,
 		fromTableName: string,
 		toTableName: string,
 		junctionTableName: string
-	) {
+	): {
+		path1: string;
+		path2: string;
+		line1: { start: { x: number; y: number }; end: { x: number; y: number } };
+		line2: { start: { x: number; y: number }; end: { x: number; y: number } };
+		junctionCenter: { x: number; y: number };
+	} {
 		const startPoint1 = getConnectionPoint(fromTableName, junctionTableName);
 		const endPoint1 = getConnectionPoint(junctionTableName, fromTableName);
 
@@ -159,7 +166,6 @@
 						)}
 						{#if junctionTable}
 							{@const manyToMany = renderManyToManyRelationship(
-								relationship,
 								fromTable.name,
 								toTable.name,
 								junctionTable.name
@@ -171,7 +177,7 @@
 								stroke-width="2"
 								stroke-dasharray="10,1"
 								fill="none"
-								class="relationship-line"
+								class="cursor-pointer hover:stroke-3"
 							/>
 
 							<path
@@ -180,7 +186,7 @@
 								stroke-width="2"
 								stroke-dasharray="10,1"
 								fill="none"
-								class="relationship-line"
+								class="cursor-pointer hover:stroke-3"
 							/>
 
 							{@const midX1 = (manyToMany.line1.start.x + manyToMany.line1.end.x) / 2}
@@ -248,7 +254,7 @@
 							stroke-width="2"
 							stroke-dasharray="10,1"
 							fill="none"
-							class="relationship-line"
+							class="cursor-pointer hover:stroke-3"
 						/>
 
 						{@const midX = startPoint.x + (endPoint.x - startPoint.x) * 0.5}
@@ -283,13 +289,3 @@
 		</g>
 	</svg>
 {/if}
-
-<style>
-	.relationship-line {
-		cursor: pointer;
-	}
-
-	.relationship-line:hover {
-		stroke-width: 3;
-	}
-</style>

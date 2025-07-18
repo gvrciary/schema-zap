@@ -132,7 +132,7 @@
 </script>
 
 <div
-    id="table-{table.name.toLowerCase()}"
+	id="table-{table.name.toLowerCase()}"
 	class="table-node max-w-96 min-w-[290px] rounded-lg border border-white/30 bg-white/90 shadow-lg select-none dark:border-gray-600 dark:bg-black/90"
 	class:dragging={isDragging}
 	class:selected={isSelected}

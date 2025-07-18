@@ -21,7 +21,9 @@ function createSqlInputStore() {
 
 	const storedInitialValue = browser ? localStorage.getItem(getKey(currentDialect)) : null;
 	const initialValue = browser
-		? (storedInitialValue !== null ? storedInitialValue : SQL_EXAMPLES[currentDialect])
+		? storedInitialValue !== null
+			? storedInitialValue
+			: SQL_EXAMPLES[currentDialect]
 		: SQL_EXAMPLES[currentDialect];
 
 	const store = writable<string>(initialValue);

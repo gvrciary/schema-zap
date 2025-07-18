@@ -37,7 +37,7 @@ export function handleParseSQL(
 				success: true
 			};
 		}
-		
+
 		return {
 			success: false,
 			error: result.error?.message || 'Failed to parse SQL',

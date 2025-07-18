@@ -2,9 +2,7 @@ import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
 export function createPersistentToggle(key: string, defaultValue = false) {
-	const initialValue = browser
-		? localStorage.getItem(key) === 'true'
-		: defaultValue;
+	const initialValue = browser ? localStorage.getItem(key) === 'true' : defaultValue;
 
 	const { subscribe, set, update } = writable(initialValue);
 
@@ -17,7 +15,7 @@ export function createPersistentToggle(key: string, defaultValue = false) {
 		subscribe,
 		set: persist,
 		toggle: () =>
-			update(current => {
+			update((current) => {
 				const next = !current;
 				if (browser) localStorage.setItem(key, next.toString());
 				return next;

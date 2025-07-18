@@ -22,13 +22,17 @@
 			hasMounted.set(true);
 			return;
 		}
-		
+
 		handleParse();
 	});
 
 	const placeholder = 'Enter your SQL DDL statements here...';
 
-	function handleSQLChange(value: string, resetZoom: boolean = false, resetPosition: boolean = false) {
+	function handleSQLChange(
+		value: string,
+		resetZoom: boolean = false,
+		resetPosition: boolean = false
+	): void {
 		sqlInput.set(value);
 		handleParse(resetZoom, resetPosition);
 	}

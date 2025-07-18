@@ -12,10 +12,21 @@
 
 	let { children }: Props = $props();
 
+	let canvasElement: HTMLDivElement;
+	let isDragging = $state(false);
+	let isTableDragging = $state(false);
+	let dragStart = { x: 0, y: 0 };
+	let draggedTable = $state<string | null>(null);
+	let dragOffset = { x: 0, y: 0 };
+
+	let lastTouchDistance = $state(0);
+	let touchStartZoom = $state(1);
+	let touchCenter = $state({ x: 0, y: 0 });
+	let isTouchPinching = $state(false);
+
 	onMount(() => {
 		initializeRelations.set(true);
 
-		// Register touch events with passive: false to allow preventDefault
 		if (canvasElement) {
 			canvasElement.addEventListener('touchstart', handleTouchStart, { passive: false });
 			canvasElement.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -30,18 +41,6 @@
 			canvasElement.removeEventListener('touchend', handleTouchEnd);
 		}
 	});
-
-	let canvasElement: HTMLDivElement;
-	let isDragging = $state(false);
-	let isTableDragging = $state(false);
-	let dragStart = { x: 0, y: 0 };
-	let draggedTable = $state<string | null>(null);
-	let dragOffset = { x: 0, y: 0 };
-
-	let lastTouchDistance = $state(0);
-	let touchStartZoom = $state(1);
-	let touchCenter = $state({ x: 0, y: 0 });
-	let isTouchPinching = $state(false);
 
 	function handleTableMove(tableName: string, newPosition: { x: number; y: number }) {
 		const tableIndex = $schema.tables.findIndex((t) => t.name === tableName);
@@ -156,8 +155,6 @@
 	function handleTouchStart(event: TouchEvent) {
 		const target = event.target as HTMLElement;
 		if (!canvasElement?.contains(target)) return;
-
-		const tableElement = target.closest('[data-table-name]');
 
 		if (event.touches.length === 1) {
 			const touch = event.touches[0];

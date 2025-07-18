@@ -61,8 +61,8 @@ export interface ParseResult {
 }
 
 export interface ErrorResult {
-  message: string;
-  statementIndex?: number;
+	message: string;
+	statementIndex?: number;
 }
 
 export interface SyntaxParseResult {

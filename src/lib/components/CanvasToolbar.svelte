@@ -3,7 +3,7 @@
 	import { canvasState } from '$lib/stores/app';
 	import { showBadgets } from '$lib/stores/ui';
 
-	function resetCanvas() {
+	function resetCanvas(): void {
 		canvasState.set({
 			zoom: 1,
 			panX: 0,
@@ -13,17 +13,17 @@
 		});
 	}
 
-	function zoomIn() {
+	function zoomIn(): void {
 		const newZoom = Math.min($canvasState.zoom * 1.2, 3);
 		canvasState.set({ ...$canvasState, zoom: newZoom });
 	}
 
-	function zoomOut() {
+	function zoomOut(): void {
 		const newZoom = Math.max($canvasState.zoom / 1.2, 0.1);
 		canvasState.set({ ...$canvasState, zoom: newZoom });
 	}
 
-	function toggleBadgets() {
+	function toggleBadgets(): void {
 		showBadgets.set(!$showBadgets);
 	}
 
