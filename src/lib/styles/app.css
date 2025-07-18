@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/jetbrains-mono';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+	body {
+		font-family: 'JetBrains Mono Variable', sans-serif !important;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-text-size-adjust: 100%;
+		-webkit-tap-highlight-color: transparent;
+	}
+}
+
+@layer utilities {
+	.select-none {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+}
+
+@media print {
+	* {
+		-webkit-print-color-adjust: exact;
+		color-adjust: exact;
+	}
+}
+
+@media (prefers-contrast: high) {
+	* {
+		border-color: currentColor;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
