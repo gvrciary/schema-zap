@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>DB Diagram</title>
+	<title>SchemaZap</title>
 	<meta name="description" content="Visual database schema editor with SQL DDL parsing" />
 </svelte:head>
 
