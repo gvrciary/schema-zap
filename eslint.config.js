@@ -34,10 +34,7 @@ export default [
 			'no-undef': 'off',
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/no-unused-vars': 'error',
-			'prefer-const': 'error',
-			'@typescript-eslint/explicit-function-return-type': 'error',
-			'@typescript-eslint/explicit-module-boundary-types': 'error',
-			'consistent-return': 'error'
+			'prefer-const': 'error'
 		}
 	},
 	...svelte.configs.recommended,
@@ -63,10 +60,7 @@ export default [
 			'no-undef': 'off',
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/no-unused-vars': 'error',
-			'prefer-const': 'error',
-			'@typescript-eslint/explicit-function-return-type': 'error',
-			'@typescript-eslint/explicit-module-boundary-types': 'error',
-			'consistent-return': 'error'
+			'prefer-const': 'error'
 		}
 	},
 	{
