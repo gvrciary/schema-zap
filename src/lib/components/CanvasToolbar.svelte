@@ -70,18 +70,17 @@
 
 		<div class="mx-2 h-6 w-px bg-gray-200 dark:bg-gray-600"></div>
 
-		<button
-			type="button"
+		<Button
+			onClick={toggleBadgets}
+			title={$showBadgets ? 'Hide badges' : 'Show badges'}
 			class={cn(
 				'flex h-10 w-10 items-center justify-center rounded-md transition-all duration-150',
 				$showBadgets
 					? 'bg-gray-600 text-white dark:bg-gray-400 dark:text-black'
 					: 'border-none bg-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
 			)}
-			onclick={toggleBadgets}
-			title={$showBadgets ? 'Hide badges' : 'Show badges'}
 		>
 			<Tag class="h-5 w-5" />
-		</button>
+		</Button>
 	</div>
 </div>

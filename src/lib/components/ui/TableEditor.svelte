@@ -58,10 +58,9 @@
 				<GripVertical class="h-3 w-3 text-gray-600 dark:text-gray-400" />
 			</div>
 
-			<button
-				type="button"
+			<Button
+				onClick={() => onToggleExpansion(table.name)}
 				class="flex flex-1 items-center gap-2 text-left"
-				onclick={() => onToggleExpansion(table.name)}
 			>
 				{#if isExpanded}
 					<ChevronDown class="h-4 w-4 text-gray-600 dark:text-gray-400" />
@@ -73,7 +72,7 @@
 					{table.name}
 				</span>
 				<span class="text-xs text-gray-500 dark:text-gray-400">({table.columns.length})</span>
-			</button>
+			</Button>
 		</div>
 
 		<div class="flex items-center gap-1">

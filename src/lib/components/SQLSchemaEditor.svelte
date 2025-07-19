@@ -598,13 +598,14 @@
 					<Database class="mx-auto mb-2 h-8 w-8 text-gray-600 dark:text-gray-400" />
 					<p class="mb-4 text-sm">No tables defined</p>
 				{/if}
-				<button
-					type="button"
+				<Button
+					variant="default"
+					size="sm"
+					onClick={() => (showNewTableForm = true)}
 					class="rounded-lg bg-gray-600 px-4 py-2 text-sm text-white transition-colors duration-150 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
-					onclick={() => (showNewTableForm = true)}
 				>
 					Create first table
-				</button>
+				</Button>
 			</div>
 		{:else}
 			<div class="space-y-3">
