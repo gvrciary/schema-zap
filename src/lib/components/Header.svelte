@@ -4,6 +4,7 @@
 	import { showSidebar, lastParseTime, darkMode } from '$lib/stores/ui';
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
+	import Button from '$lib/components/ui/Button.svelte';
 
 	async function exportSchema(): Promise<void> {
 		const canvas = document.querySelector('.canvas-container') as unknown as HTMLElement;
@@ -59,10 +60,10 @@
 		{/if}
 
 		<div class="flex items-center gap-1">
-			<button
-				type="button"
-				class="cursor-pointer rounded-lg p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 sm:p-2 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-				on:click={toggleDarkMode}
+			<Button
+				variant="icon"
+				size="sm"
+				onClick={toggleDarkMode}
 				title={$darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
 			>
 				{#if $darkMode}
@@ -70,22 +71,22 @@
 				{:else}
 					<Moon class="h-4 w-4" />
 				{/if}
-			</button>
+			</Button>
 
-			<button
-				type="button"
-				class="cursor-pointer rounded-lg p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 sm:p-2 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-				on:click={exportSchema}
+			<Button
+				variant="icon"
+				size="sm"
+				onClick={exportSchema}
 				title="Export to PNG"
 				disabled={$schema.tables.length === 0}
 			>
 				<Download class="h-4 w-4" />
-			</button>
+			</Button>
 
-			<button
-				type="button"
-				class="cursor-pointer rounded-lg p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 sm:p-2 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-				on:click={toggleSidebar}
+			<Button
+				variant="icon"
+				size="sm"
+				onClick={toggleSidebar}
 				title={$showSidebar ? 'Hide sidebar' : 'Show sidebar'}
 			>
 				{#if $showSidebar}
@@ -93,7 +94,7 @@
 				{:else}
 					<Maximize2 class="h-4 w-4" />
 				{/if}
-			</button>
+			</Button>
 		</div>
 	</div>
 </header>

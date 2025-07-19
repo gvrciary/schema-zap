@@ -2,16 +2,8 @@
 	import { onMount } from 'svelte';
 	import { SQLDialect } from '$lib/types';
 	import { SQL_EXAMPLES, SQL_DATA_TYPES, SQL_KEYWORDS } from '$lib/constants';
-	import {
-		Copy,
-		RotateCcw,
-		AlertCircle,
-		CheckCircle,
-		ChevronDown,
-		Database,
-		Check,
-		Trash2
-	} from 'lucide-svelte';
+	import { RotateCcw, AlertCircle, CheckCircle, ChevronDown, Database } from 'lucide-svelte';
+	import { Button, CopyButton, DeleteButton } from '$lib/components/ui';
 	import { sqlInput, selectedDialect } from '$lib/stores/app';
 	import { handleParseSQL } from '$lib/utils/sqlHandler';
 	import { hasMounted } from '$lib/stores/ui';
@@ -40,7 +32,7 @@
 	let textareaElement: HTMLTextAreaElement;
 	let codeElement: HTMLElement;
 	let isParsingError = $state(false);
-	let isCopied = $state(false);
+
 	let errorMessage = $state('');
 	let isValidSQL = $state(false);
 	let errorStatementIndex = $state(-1);
@@ -349,7 +341,6 @@
 	}
 
 	function handleParse(resetZoom: boolean = false, resetPosition: boolean = false): void {
-		if (isCopied) isCopied = false;
 		const result = handleParseSQL(resetZoom, resetPosition);
 
 		if (result.success) clearError();
@@ -393,18 +384,6 @@
 				textareaElement.selectionStart = start + 4;
 				textareaElement.selectionEnd = start + 4;
 			}, 0);
-		}
-	}
-
-	async function copyToClipboard(): Promise<void> {
-		try {
-			await navigator.clipboard.writeText($sqlInput);
-			isCopied = true;
-			setTimeout(() => {
-				isCopied = false;
-			}, 2000);
-		} catch (error) {
-			console.error('Failed to copy to clipboard:', error);
 		}
 	}
 
@@ -507,40 +486,13 @@
 			</div>
 
 			<div class="flex flex-shrink-0 items-center gap-2">
-				<button
-					type="button"
-					class="cursor-pointer rounded-md p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-					onclick={loadSample}
-					title="Load sample SQL"
-				>
+				<Button variant="icon" size="sm" title="Load sample SQL" onClick={loadSample}>
 					<RotateCcw class="h-4 w-4" />
-				</button>
+				</Button>
 
-				<button
-					type="button"
-					class="cursor-pointer rounded-md p-1.5 text-gray-600 transition-all duration-150 hover:bg-gray-100 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200 {isCopied
-						? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400'
-						: ''}"
-					onclick={copyToClipboard}
-					title={isCopied ? 'Copied!' : 'Copy to clipboard'}
-					disabled={!$sqlInput}
-				>
-					{#if isCopied}
-						<Check class="h-4 w-4 animate-pulse" />
-					{:else}
-						<Copy class="h-4 w-4" />
-					{/if}
-				</button>
+				<CopyButton text={$sqlInput} disabled={!$sqlInput} />
 
-				<button
-					type="button"
-					class="cursor-pointer rounded-md p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-					onclick={clearInput}
-					title="Clear input"
-					disabled={!$sqlInput}
-				>
-					<Trash2 class="h-4 w-4" />
-				</button>
+				<DeleteButton title="Clear input" disabled={!$sqlInput} onConfirm={clearInput} />
 			</div>
 		</div>
 
