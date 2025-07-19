@@ -141,8 +141,8 @@
 		{id}
 		type="button"
 		class={cn(
-			'flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 transition-all duration-200 hover:border-gray-400 focus:border-gray-500 focus:ring-2 focus:ring-gray-500/50 dark:border-gray-600 dark:bg-[#111111]/60 dark:text-gray-100 dark:hover:border-gray-500',
-			disabled && 'cursor-not-allowed opacity-50 hover:border-gray-300 dark:hover:border-gray-600'
+			'flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 transition-all duration-200 hover:border-gray-400 focus:border-gray-500 focus:ring-2 focus:ring-gray-500/50 dark:border-gray-700 dark:bg-[#111111] dark:text-gray-300 dark:hover:border-gray-500',
+			disabled && 'cursor-not-allowed opacity-50 hover:border-gray-200 dark:hover:border-gray-700'
 		)}
 		{disabled}
 		onclick={toggle}
@@ -177,7 +177,7 @@
 		<div
 			data-dropdown-content
 			class={cn(
-				'absolute top-full right-0 left-0 z-50 mt-1 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800',
+				'absolute top-full right-0 left-0 z-50 mt-1 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-[#111111]',
 				maxHeight,
 				dropdownClass
 			)}
@@ -187,7 +187,7 @@
 					<button
 						type="button"
 						class={cn(
-							'flex w-full cursor-pointer items-center justify-between px-3 py-2 text-left text-sm text-gray-900 transition-colors duration-150 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none dark:text-gray-100 dark:hover:bg-gray-700',
+							'flex w-full cursor-pointer items-center justify-between px-3 py-2 text-left text-sm text-gray-900 transition-colors duration-150 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none dark:text-gray-300 dark:hover:bg-gray-700',
 							option.value === value &&
 								'bg-gray-50 text-gray-900 dark:bg-gray-700/50 dark:text-gray-300',
 							option.disabled &&
