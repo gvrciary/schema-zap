@@ -1,7 +1,7 @@
 import { isLoading, lastParseTime } from '$lib/stores/ui';
 import { schema, selectedDialect, sqlInput } from '$lib/stores/app';
 import { get } from 'svelte/store';
-import { parseSQL } from '$lib/parsers/sqlParser';
+import { parseSQL } from '$lib/parsers/sql-parser';
 import { fitCanvasToTables } from '$lib/utils/canvas';
 import type { SyntaxParseResult } from '$lib/types';
 
