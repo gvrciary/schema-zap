@@ -18,8 +18,6 @@
 		handleParse();
 	});
 
-	const placeholder = 'Enter your SQL DDL statements here...';
-
 	function handleSQLChange(
 		value: string,
 		resetZoom: boolean = false,
@@ -165,7 +163,6 @@
 
 		<SQLInput
 			bind:value={$sqlInput}
-			{placeholder}
 			selectedDialect={$selectedDialect}
 			{errorStatementIndex}
 			onchange={handleInputChange}

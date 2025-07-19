@@ -4,7 +4,6 @@
 
 	interface Props {
 		value: string;
-		placeholder?: string;
 		selectedDialect: SQLDialect;
 		disabled?: boolean;
 		errorStatementIndex?: number;
@@ -14,14 +13,14 @@
 
 	let {
 		value = $bindable(),
-		placeholder = 'Enter your SQL DDL statements here...',
 		selectedDialect,
 		disabled = false,
 		errorStatementIndex = -1,
 		onchange,
 		onkeydown
 	}: Props = $props();
-
+	
+	const placeholder = 'Enter your SQL DDL statements here...';
 	let textareaElement: HTMLTextAreaElement;
 	let codeElement: HTMLElement;
 

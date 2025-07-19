@@ -32,7 +32,6 @@
 			size="sm"
 			title="Confirm delete"
 			onClick={handleConfirm}
-			class="text-red-600 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300"
 		>
 			<Check class="h-4 w-4" />
 		</Button>
