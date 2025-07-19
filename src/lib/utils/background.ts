@@ -7,7 +7,7 @@ export function getBackground(canvas: CanvasState, darkMode: boolean): Partial<C
 	const offsetY = canvas.panY % scaledGridSize;
 
 	const dotSize = Math.max(1, Math.min(3, canvas.zoom * 1.5));
-	const gridColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+	const gridColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.2)';
 
 	return {
 		backgroundImage: `radial-gradient(circle, ${gridColor} ${dotSize}px, transparent ${dotSize}px)`,
