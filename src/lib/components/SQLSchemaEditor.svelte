@@ -3,21 +3,13 @@
 	import { SQLDialect, type Table, type Column } from '$lib/types';
 	import { SQL_DATA_TYPES, REQUIRED_LENGTH_TYPES, OPTIONAL_LENGTH_TYPES } from '$lib/constants';
 	import { handleParseSQL } from '$lib/utils/sqlHandler';
-	import {
-		Plus,
-		Trash2,
-		Database,
-		ChevronDown,
-		ChevronRight,
-		Pencil,
-		GripVertical,
-		MessageCircleXIcon
-	} from 'lucide-svelte';
+	import { Plus, Trash2, Database, MessageCircleXIcon } from 'lucide-svelte';
+	import { Modal, Button, TableEditor } from '$lib/components/ui';
 
 	let visualTables: Table[] = $state([]);
 	let expandedTables: Set<string> = $state(new Set());
 	let selectedTable: string | null = $state(null);
-	const SQL_TYPES = $derived(SQL_DATA_TYPES[$selectedDialect] );
+	const SQL_TYPES = $derived(SQL_DATA_TYPES[$selectedDialect]);
 	const dragState = $state({
 		isDragging: false,
 		dragType: '' as 'table' | 'column' | '',
@@ -581,23 +573,18 @@
 			<span class="text-sm font-medium text-gray-900 dark:text-gray-100">Schema Editor</span>
 		</div>
 		<div class="flex items-center gap-2">
-			<button
-				type="button"
-				class="cursor-pointer rounded-md p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 disabled:cursor-not-allowed dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-				onclick={() => (showNewTableForm = true)}
-				title="Add table"
-			>
+			<Button variant="icon" size="sm" onClick={() => (showNewTableForm = true)} title="Add table">
 				<Plus class="h-4 w-4" />
-			</button>
-			<button
-				type="button"
-				class="cursor-pointer rounded-md p-1.5 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 disabled:cursor-not-allowed dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-				onclick={clearAll}
+			</Button>
+			<Button
+				variant="icon"
+				size="sm"
+				onClick={clearAll}
 				title="Clear all"
 				disabled={visualTables.length === 0 && !$sqlInput.trim()}
 			>
 				<Trash2 class="h-4 w-4" />
-			</button>
+			</Button>
 		</div>
 	</div>
 
@@ -622,518 +609,333 @@
 		{:else}
 			<div class="space-y-3">
 				{#each visualTables as table, tableIndex (table.name)}
-					<div
-						class="overflow-hidden rounded-lg border border-gray-200 bg-white {dragState.isDragging &&
-						dragState.dragType === 'table' &&
-						dragState.dragIndex === tableIndex
-							? 'opacity-50'
-							: ''} {dragState.isDragging &&
-						dragState.dragType === 'table' &&
-						dragState.dropIndex === tableIndex
-							? 'border-gray-400 bg-gray-50 dark:border-gray-500 dark:bg-gray-800/50'
-							: ''} dark:border-gray-700 dark:bg-black"
-						ondragover={(e) => handleTableDragOver(e, tableIndex)}
-						ondrop={(e) => handleTableDrop(e, tableIndex)}
-						role="application"
-					>
-						<div class="flex items-center justify-between bg-gray-50 px-3 py-2 dark:bg-zinc-900">
-							<div class="flex flex-1 items-center gap-2">
-								<div
-									class="drag-handle cursor-move rounded p-1 transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-600"
-									title="Drag to reorder"
-									draggable="true"
-									ondragstart={(e) => handleTableDragStart(e, tableIndex)}
-									ondragend={handleDragEnd}
-									role="application"
-								>
-									<GripVertical class="h-3 w-3 text-gray-600 dark:text-gray-400" />
-								</div>
-								<button
-									type="button"
-									class="flex flex-1 items-center gap-2 text-left"
-									onclick={() => toggleTableExpansion(table.name)}
-								>
-									{#if expandedTables.has(table.name)}
-										<ChevronDown class="h-4 w-4 text-gray-600 dark:text-gray-400" />
-									{:else}
-										<ChevronRight class="h-4 w-4 text-gray-600 dark:text-gray-400" />
-									{/if}
-									<Database class="h-4 w-4 text-gray-600 dark:text-gray-400" />
-									<span class="max-w-[100px] truncate font-medium text-gray-900 dark:text-gray-100"
-										>{table.name}</span
-									>
-									<span class="text-xs text-gray-500 dark:text-gray-400"
-										>({table.columns.length})</span
-									>
-								</button>
-							</div>
-							<div class="flex items-center gap-1">
-								<button
-									type="button"
-									class="cursor-pointer rounded p-1 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-									onclick={() => editTable(table.name)}
-									title="Edit table"
-								>
-									<Pencil class="h-3 w-3" />
-								</button>
-								<button
-									type="button"
-									class="cursor-pointer rounded p-1 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-									onclick={() => initNewColumnForm(table.name)}
-									title="Add column"
-								>
-									<Plus class="h-3 w-3" />
-								</button>
-								<button
-									type="button"
-									class="cursor-pointer rounded p-1 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-									onclick={() => removeTable(table.name)}
-									title="Remove table"
-								>
-									<Trash2 class="h-3 w-3 " />
-								</button>
-							</div>
-						</div>
-
-						{#if expandedTables.has(table.name)}
-							<div class="space-y-2 p-3">
-								{#if table.columns.length === 0}
-									<p class="text-sm text-gray-500 italic dark:text-gray-400">No columns defined</p>
-								{:else}
-									{#each table.columns as column, columnIndex (column.name)}
-										<div
-											class="flex items-center justify-between rounded border border-gray-300 bg-gray-50 p-2 {dragState.isDragging &&
-											dragState.dragType === 'column' &&
-											dragState.dragTableName === table.name &&
-											dragState.dragIndex === columnIndex
-												? 'opacity-50'
-												: ''} {dragState.isDragging &&
-											dragState.dragType === 'column' &&
-											dragState.dropTableName === table.name &&
-											dragState.dropIndex === columnIndex
-												? 'border-gray-400 bg-gray-100 dark:border-gray-500 dark:bg-gray-800/30'
-												: ''} dark:border-gray-700 dark:bg-zinc-900"
-											ondragover={(e) => handleColumnDragOver(e, table.name, columnIndex)}
-											ondrop={(e) => handleColumnDrop(e, table.name, columnIndex)}
-											role="application"
-										>
-											<div class="flex flex-1 items-center gap-2">
-												<div
-													class="drag-handle cursor-move rounded p-1 transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-500"
-													title="Drag to reorder"
-													draggable="true"
-													ondragstart={(e) => handleColumnDragStart(e, table.name, columnIndex)}
-													ondragend={handleDragEnd}
-													role="application"
-												>
-													<GripVertical class="h-3 w-3 text-gray-600 dark:text-gray-400" />
-												</div>
-												<div class="flex flex-col">
-													<span class="font-mono text-sm text-gray-900 dark:text-gray-100"
-														>{column.name}</span
-													>
-													<span class="font-mono text-xs text-gray-500 dark:text-gray-400"
-														>{column.type}</span
-													>
-												</div>
-
-												{#if column.primaryKey}
-													<span
-														class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
-														title="Primary Key">PK</span
-													>
-												{/if}
-												{#if column.foreignKey}
-													<span
-														class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
-														title="Foreign Key → {column.foreignKey.table}.{column.foreignKey
-															.column}">FK</span
-													>
-												{/if}
-												{#if column.autoIncrement}
-													<span
-														class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
-														title="Auto Increment">AI</span
-													>
-												{/if}
-												{#if !column.nullable}
-													<span
-														class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
-														title="Not Null">NN</span
-													>
-												{/if}
-												{#if column.unique}
-													<span
-														class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
-														title="Unique">UQ</span
-													>
-												{/if}
-												{#if column.defaultValue}
-													<span
-														class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
-														title="Default: {column.defaultValue}">DF</span
-													>
-												{/if}
-											</div>
-											<div class="flex items-center gap-1">
-												<button
-													type="button"
-													class="cursor-pointer rounded p-1 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-													onclick={() => initEditColumnForm(table.name, column)}
-													title="Edit column"
-												>
-													<Pencil class="h-3 w-3 " />
-												</button>
-												<button
-													type="button"
-													class="cursor-pointer rounded p-1 text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-200"
-													onclick={() => removeColumn(table.name, column.name)}
-													title="Remove column"
-												>
-													<Trash2 class="h-3 w-3" />
-												</button>
-											</div>
-										</div>
-									{/each}
-								{/if}
-							</div>
-						{/if}
-					</div>
+					<TableEditor
+						{table}
+						{tableIndex}
+						isExpanded={expandedTables.has(table.name)}
+						isDragging={dragState.isDragging &&
+							dragState.dragType === 'table' &&
+							dragState.dragIndex === tableIndex}
+						isDropTarget={dragState.isDragging &&
+							dragState.dragType === 'table' &&
+							dragState.dropIndex === tableIndex}
+						draggedColumnIndex={dragState.isDragging &&
+						dragState.dragType === 'column' &&
+						dragState.dragTableName === table.name
+							? dragState.dragIndex
+							: -1}
+						dropColumnIndex={dragState.isDragging &&
+						dragState.dragType === 'column' &&
+						dragState.dropTableName === table.name
+							? dragState.dropIndex
+							: -1}
+						onToggleExpansion={toggleTableExpansion}
+						onEditTable={editTable}
+						onAddColumn={initNewColumnForm}
+						onRemoveTable={removeTable}
+						onEditColumn={initEditColumnForm}
+						onRemoveColumn={removeColumn}
+						onTableDragStart={handleTableDragStart}
+						onTableDragOver={handleTableDragOver}
+						onTableDrop={handleTableDrop}
+						onColumnDragStart={handleColumnDragStart}
+						onColumnDragOver={handleColumnDragOver}
+						onColumnDrop={handleColumnDrop}
+						onDragEnd={handleDragEnd}
+					/>
 				{/each}
 			</div>
 		{/if}
 	</div>
 </div>
 
-{#if showNewTableForm}
-	<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl dark:bg-[#111111]">
-			<h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-gray-100">New Table</h3>
-			<div class="space-y-4">
-				<div>
-					<label
-						for="table-name"
-						class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-					>
-						Table name
-					</label>
-					<input
-						id="table-name"
-						type="text"
-						bind:value={newTableName}
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
-						placeholder="usuarios, productos, etc."
-						onkeydown={(e) => e.key === 'Enter' && addTable()}
-					/>
-				</div>
-			</div>
-			<div class="mt-6 flex justify-end gap-3">
-				<button
-					type="button"
-					class="cursor-pointer rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-150 hover:bg-gray-200 disabled:cursor-not-allowed dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
-					onclick={() => {
-						showNewTableForm = false;
-						newTableName = '';
+<Modal
+	open={showNewTableForm}
+	size="md"
+	onClose={() => {
+		showNewTableForm = false;
+		newTableName = '';
+	}}
+>
+	<span slot="title">New Table</span>
+
+	<div>
+		<label for="table-name" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+			Table name
+		</label>
+		<input
+			id="table-name"
+			type="text"
+			bind:value={newTableName}
+			class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
+			placeholder="usuarios, productos, etc."
+			onkeydown={(e) => e.key === 'Enter' && addTable()}
+		/>
+	</div>
+
+	<div slot="footer">
+		<Button
+			variant="ghost"
+			onClick={() => {
+				showNewTableForm = false;
+				newTableName = '';
+			}}
+		>
+			Cancel
+		</Button>
+		<Button variant="default" onClick={addTable} disabled={!isValidTableName(newTableName)}>
+			Create Table
+		</Button>
+	</div>
+</Modal>
+
+<Modal open={editTableForm.isVisible} size="md" onClose={() => (editTableForm.isVisible = false)}>
+	<span slot="title">Edit Table</span>
+
+	<div>
+		<label
+			for="edit-table-name"
+			class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+		>
+			Table name
+		</label>
+		<input
+			id="edit-table-name"
+			type="text"
+			bind:value={editTableForm.name}
+			class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
+			onkeydown={(e) => e.key === 'Enter' && saveTableChanges()}
+		/>
+	</div>
+
+	<div slot="footer">
+		<Button variant="ghost" onClick={() => (editTableForm.isVisible = false)}>Cancel</Button>
+		<Button variant="default" onClick={saveTableChanges}>Save Changes</Button>
+	</div>
+</Modal>
+
+<Modal open={showColumnForm} size="lg" onClose={() => (showColumnForm = false)}>
+	<span slot="title">{columnForm.isEdit ? 'Edit' : 'New'} Column</span>
+
+	<div>
+		<label
+			for="column-name"
+			class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+		>
+			Column name
+		</label>
+		<input
+			id="column-name"
+			type="text"
+			bind:value={columnForm.name}
+			class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
+			placeholder="id, nombre, email, etc."
+			onkeydown={(e) => e.key === 'Enter' && saveColumn()}
+		/>
+	</div>
+
+	<div>
+		<label
+			for="column-type"
+			class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+		>
+			Data type
+		</label>
+		<select
+			id="column-type"
+			bind:value={columnForm.type}
+			class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100"
+		>
+			<option value="">Select type...</option>
+			{#each SQL_TYPES as dataType, index (index)}
+				<option value={dataType}>{dataType}</option>
+			{/each}
+		</select>
+	</div>
+
+	{#if columnForm.type && canHaveLength(columnForm.type)}
+		<div>
+			<label
+				for="column-length"
+				class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+			>
+				Length {requiresLength(columnForm.type) ? '(required)' : '(optional)'}
+			</label>
+			<input
+				id="column-length"
+				type="number"
+				min="1"
+				max="65535"
+				bind:value={columnForm.length}
+				class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
+				placeholder="Ej: 255, 50, 100..."
+				required={requiresLength(columnForm.type)}
+				oninput={(e) => {
+					const target = e.target as HTMLInputElement;
+					target.value = target.value.replace(/[^0-9]/g, '');
+					const numValue = parseInt(target.value);
+					columnForm.length = isNaN(numValue) ? undefined : numValue;
+				}}
+				onkeydown={(e) => {
+					const allowedKeys = [
+						'Backspace',
+						'Delete',
+						'ArrowLeft',
+						'ArrowRight',
+						'ArrowUp',
+						'ArrowDown',
+						'Tab',
+						'Enter'
+					];
+					const isNumber = /^[0-9]$/.test(e.key);
+					if (!isNumber && !allowedKeys.includes(e.key)) {
+						e.preventDefault();
+					}
+				}}
+			/>
+			{#if requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0)}
+				<p class="mt-1 text-xs text-red-600 dark:text-red-400">
+					This data type requires specifying a length
+				</p>
+			{/if}
+		</div>
+	{/if}
+
+	<div class="grid grid-cols-2 gap-4">
+		<label
+			class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {tableHasPrimaryKey(
+				columnForm.tableName,
+				columnForm.originalName
+			) && !columnForm.primaryKey
+				? 'opacity-50'
+				: ''} dark:hover:bg-gray-700"
+		>
+			<input
+				type="checkbox"
+				bind:checked={columnForm.primaryKey}
+				class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
+				disabled={tableHasPrimaryKey(columnForm.tableName, columnForm.originalName) &&
+					!columnForm.primaryKey}
+			/>
+			<span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+				Primary Key
+				{#if tableHasPrimaryKey(columnForm.tableName, columnForm.originalName) && !columnForm.primaryKey}
+					<span class="block text-xs text-gray-500">(Already exists a PK in this table)</span>
+				{/if}
+			</span>
+		</label>
+
+		{#if isFeatureSupported('autoIncrement')}
+			<label
+				class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {!columnForm.primaryKey
+					? 'opacity-50'
+					: ''} dark:hover:bg-gray-700"
+			>
+				<input
+					type="checkbox"
+					bind:checked={columnForm.autoIncrement}
+					class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
+					disabled={!columnForm.primaryKey}
+				/>
+				<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Auto Increment</span>
+			</label>
+		{/if}
+
+		<label
+			class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {columnForm.primaryKey
+				? 'opacity-50'
+				: ''} dark:hover:bg-gray-700"
+		>
+			<input
+				type="checkbox"
+				bind:checked={columnForm.nullable}
+				class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
+				disabled={columnForm.primaryKey}
+			/>
+			<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Nullable</span>
+		</label>
+
+		<label
+			class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {columnForm.primaryKey
+				? 'opacity-50'
+				: ''} dark:hover:bg-gray-700"
+		>
+			<input
+				type="checkbox"
+				bind:checked={columnForm.unique}
+				class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
+				disabled={columnForm.primaryKey}
+			/>
+			<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Unique</span>
+		</label>
+	</div>
+
+	<div>
+		{#if columnForm.type}
+			{@const compatiblePKs = getCompatiblePrimaryKeys(
+				columnForm.tableName,
+				columnForm.type,
+				columnForm.length
+			)}
+
+			{#if compatiblePKs.length > 0}
+				<label
+					for="foreign-key-select"
+					class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+				>
+					Foreign Key
+				</label>
+				<select
+					id="foreign-key-select"
+					value={columnForm.foreignKey
+						? `${columnForm.foreignKey.table}.${columnForm.foreignKey.column}`
+						: ''}
+					class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100"
+					onchange={(e) => {
+						const target = e.target as HTMLSelectElement;
+						if (target.value) {
+							const [table, column] = target.value.split('.');
+							columnForm.foreignKey = { table, column };
+						} else {
+							columnForm.foreignKey = undefined;
+						}
 					}}
 				>
-					Cancel
-				</button>
-				<button
-					type="button"
-					class="cursor-pointer rounded-lg bg-gray-600 px-4 py-2 text-white transition-colors duration-150 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
-					onclick={addTable}
-					disabled={!isValidTableName(newTableName)}
-				>
-					Create Table
-				</button>
-			</div>
-		</div>
+					<option value="">none</option>
+					{#each compatiblePKs as pk, index (index)}
+						<option value="{pk.table}.{pk.column}">
+							{pk.table}.{pk.column} ({pk.type}{pk.length ? `(${pk.length})` : ''})
+						</option>
+					{/each}
+				</select>
+			{/if}
+		{/if}
 	</div>
-{/if}
 
-{#if editTableForm.isVisible}
-	<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl dark:bg-[#111111]">
-			<h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-gray-100">Edit Table</h3>
-			<div class="space-y-4">
-				<div>
-					<label
-						for="edit-table-name"
-						class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-					>
-						Table name
-					</label>
-					<input
-						id="edit-table-name"
-						type="text"
-						bind:value={editTableForm.name}
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
-						placeholder="usuarios, productos, etc."
-						onkeydown={(e) => e.key === 'Enter' && saveTableChanges()}
-					/>
-				</div>
-			</div>
-			<div class="mt-6 flex justify-end gap-3">
-				<button
-					type="button"
-					class="cursor-pointer rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-150 hover:bg-gray-200 disabled:cursor-not-allowed dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
-					onclick={() => (editTableForm.isVisible = false)}
-				>
-					Cancel
-				</button>
-				<button
-					type="button"
-					class="cursor-pointer rounded-lg bg-gray-600 px-4 py-2 text-white transition-colors duration-150 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
-					onclick={saveTableChanges}
-					disabled={!editTableForm.name.trim()}
-				>
-					Save
-				</button>
-			</div>
-		</div>
-	</div>
-{/if}
-
-{#if showColumnForm}
-	<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-		<div
-			class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-2xl dark:bg-[#111111]"
+	<div slot="footer">
+		<Button variant="ghost" onClick={() => (showColumnForm = false)}>Cancel</Button>
+		<Button
+			variant="default"
+			onClick={saveColumn}
+			disabled={!columnForm.name.trim() ||
+				$schema.tables.some((t) => {
+					return (
+						t.name === columnForm.tableName &&
+						t.columns.some(
+							(c) =>
+								c.name.toLowerCase() === columnForm.name.toLowerCase() &&
+								((columnForm.isEdit && columnForm.originalName !== columnForm.name.toLowerCase()) ||
+									!columnForm.isEdit)
+						)
+					);
+				}) ||
+				!columnForm.type ||
+				(requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0))}
 		>
-			<h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-gray-100">
-				{columnForm.isEdit ? 'Edit' : 'New'} Column - {columnForm.tableName}
-			</h3>
-			<div class="space-y-4">
-				<div>
-					<label
-						for="column-name"
-						class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-					>
-						Column name
-					</label>
-					<input
-						id="column-name"
-						type="text"
-						bind:value={columnForm.name}
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
-						placeholder="id, name, email, etc."
-					/>
-				</div>
-
-				<div>
-					<label
-						for="column-type"
-						class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-					>
-						Data type
-					</label>
-					<select
-						id="column-type"
-						bind:value={columnForm.type}
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100"
-					>
-						<option value="">Select type...</option>
-						{#each SQL_TYPES as dataType, index (index)}
-							<option value={dataType}>{dataType}</option>
-						{/each}
-					</select>
-				</div>
-
-				{#if columnForm.type && canHaveLength(columnForm.type)}
-					<div>
-						<label
-							for="column-length"
-							class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-						>
-							Length {requiresLength(columnForm.type) ? '(required)' : '(optional)'}
-						</label>
-						<input
-							id="column-length"
-							type="number"
-							min="1"
-							max="65535"
-							bind:value={columnForm.length}
-							class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100 dark:placeholder-gray-400"
-							placeholder="Ej: 255, 50, 100..."
-							required={requiresLength(columnForm.type)}
-							oninput={(e) => {
-								const target = e.target as HTMLInputElement;
-								target.value = target.value.replace(/[^0-9]/g, '');
-								const numValue = parseInt(target.value);
-								columnForm.length = isNaN(numValue) ? undefined : numValue;
-							}}
-							onkeydown={(e) => {
-								const allowedKeys = [
-									'Backspace',
-									'Delete',
-									'ArrowLeft',
-									'ArrowRight',
-									'ArrowUp',
-									'ArrowDown',
-									'Tab',
-									'Enter'
-								];
-								const isNumber = /^[0-9]$/.test(e.key);
-								if (!isNumber && !allowedKeys.includes(e.key)) {
-									e.preventDefault();
-								}
-							}}
-						/>
-						{#if requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0)}
-							<p class="mt-1 text-xs text-red-600 dark:text-red-400">
-								This data type requires specifying a length
-							</p>
-						{/if}
-					</div>
-				{/if}
-
-				<div class="grid grid-cols-2 gap-4">
-					<label
-						class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {tableHasPrimaryKey(
-							columnForm.tableName,
-							columnForm.originalName
-						) && !columnForm.primaryKey
-							? 'opacity-50'
-							: ''} dark:hover:bg-gray-700"
-					>
-						<input
-							type="checkbox"
-							bind:checked={columnForm.primaryKey}
-							class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
-							disabled={tableHasPrimaryKey(columnForm.tableName, columnForm.originalName) &&
-								!columnForm.primaryKey}
-						/>
-						<span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-							Primary Key
-							{#if tableHasPrimaryKey(columnForm.tableName, columnForm.originalName) && !columnForm.primaryKey}
-								<span class="block text-xs text-gray-500">(Already exists a PK in this table)</span>
-							{/if}
-						</span>
-					</label>
-
-					{#if isFeatureSupported('autoIncrement')}
-						<label
-							class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {!columnForm.primaryKey
-								? 'opacity-50'
-								: ''} dark:hover:bg-gray-700"
-						>
-							<input
-								type="checkbox"
-								bind:checked={columnForm.autoIncrement}
-								class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
-								disabled={!columnForm.primaryKey}
-							/>
-							<span class="text-sm font-medium text-gray-700 dark:text-gray-300"
-								>Auto Increment</span
-							>
-						</label>
-					{/if}
-
-					<label
-						class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {columnForm.primaryKey
-							? 'opacity-50'
-							: ''} dark:hover:bg-gray-700"
-					>
-						<input
-							type="checkbox"
-							bind:checked={columnForm.nullable}
-							class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
-							disabled={columnForm.primaryKey}
-						/>
-						<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Nullable</span>
-					</label>
-
-					<label
-						class="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-50 {columnForm.primaryKey
-							? 'opacity-50'
-							: ''} dark:hover:bg-gray-700"
-					>
-						<input
-							type="checkbox"
-							bind:checked={columnForm.unique}
-							class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-500 dark:bg-gray-600"
-							disabled={columnForm.primaryKey}
-						/>
-						<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Unique</span>
-					</label>
-				</div>
-
-				<div>
-					{#if columnForm.type}
-						{@const compatiblePKs = getCompatiblePrimaryKeys(
-							columnForm.tableName,
-							columnForm.type,
-							columnForm.length
-						)}
-
-						{#if compatiblePKs.length > 0}
-							<label
-								for="foreign-key-select"
-								class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-							>
-								Foreign Key
-							</label>
-							<select
-								id="foreign-key-select"
-								value={columnForm.foreignKey
-									? `${columnForm.foreignKey.table}.${columnForm.foreignKey.column}`
-									: ''}
-								class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-zinc-900 dark:text-gray-100"
-								onchange={(e) => {
-									const target = e.target as HTMLSelectElement;
-									if (target.value) {
-										const [table, column] = target.value.split('.');
-										columnForm.foreignKey = { table, column };
-									} else {
-										columnForm.foreignKey = undefined;
-									}
-								}}
-							>
-								<option value="">none</option>
-								{#each compatiblePKs as pk, index (index)}
-									<option value="{pk.table}.{pk.column}">
-										{pk.table}.{pk.column} ({pk.type}{pk.length ? `(${pk.length})` : ''})
-									</option>
-								{/each}
-							</select>
-						{/if}
-					{/if}
-				</div>
-			</div>
-
-			<div class="mt-6 flex justify-end gap-3">
-				<button
-					type="button"
-					class="cursor-pointer rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-150 hover:bg-gray-200 disabled:cursor-not-allowed dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
-					onclick={() => (showColumnForm = false)}
-				>
-					Cancel
-				</button>
-				<button
-					type="button"
-					class="cursor-pointer rounded-lg bg-gray-600 px-4 py-2 text-white transition-colors duration-150 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
-					onclick={saveColumn}
-					disabled={!columnForm.name.trim() ||
-						$schema.tables.some((t) => {
-							return (
-								t.name === columnForm.tableName &&
-								t.columns.some(
-									(c) =>
-										c.name.toLowerCase() === columnForm.name.toLowerCase() &&
-										((columnForm.isEdit &&
-											columnForm.originalName !== columnForm.name.toLowerCase()) ||
-											!columnForm.isEdit)
-								)
-							);
-						}) ||
-						!columnForm.type ||
-						(requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0))}
-				>
-					{columnForm.isEdit ? 'Save' : 'Add'} Column
-				</button>
-			</div>
-		</div>
+			{columnForm.isEdit ? 'Save' : 'Add'} Column
+		</Button>
 	</div>
-{/if}
+</Modal>
 
 <style>
 	:global(.max-h-\[90vh\]::-webkit-scrollbar) {
@@ -1151,22 +953,5 @@
 
 	:global(.max-h-\[90vh\]::-webkit-scrollbar-thumb:hover) {
 		background: #94a3b8;
-	}
-
-	.drag-handle {
-		opacity: 0.6;
-		transition: opacity 0.2s ease;
-	}
-
-	.drag-handle:hover {
-		opacity: 1;
-	}
-
-	[draggable='true'] {
-		transition: all 0.2s ease;
-	}
-
-	[draggable='true']:active {
-		cursor: grabbing;
 	}
 </style>
