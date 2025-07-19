@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { SQLDialect } from '$lib/types';
 	import { SQL_EXAMPLES, SQL_DATA_TYPES, SQL_KEYWORDS } from '$lib/constants';
-	import { RotateCcw, AlertCircle, CheckCircle, ChevronDown, Database } from 'lucide-svelte';
-	import { Button, CopyButton, DeleteButton } from '$lib/components/ui';
+	import { RotateCcw, AlertCircle, CheckCircle, Database } from 'lucide-svelte';
+	import { Button, CopyButton, DeleteButton, Dropdown } from '$lib/components/ui';
 	import { sqlInput, selectedDialect } from '$lib/stores/app';
 	import { handleParseSQL } from '$lib/utils/sqlHandler';
 	import { hasMounted } from '$lib/stores/ui';
@@ -257,12 +257,6 @@
 		syncContent();
 	});
 
-	function onDialectChange(dialect: SQLDialect): void {
-		selectedDialect.set(dialect);
-		handleParse(true, true);
-	}
-
-	let isOpen = $state(false);
 	const dialects = Object.values(SQLDialect);
 
 	function getDialectColor(dialect: SQLDialect): string {
@@ -280,54 +274,7 @@
 		}
 	}
 
-	function handleDialectSelect(dialect: SQLDialect): void {
-		isOpen = false;
-		if (dialect !== $selectedDialect) {
-			onDialectChange(dialect);
-		}
-	}
-
-	function handleClickOutside(event: MouseEvent): void {
-		const target = event.target as HTMLElement;
-		if (!target.closest('.dialect-selector')) {
-			isOpen = false;
-		}
-	}
-
-	function handleKeyDownSelector(event: KeyboardEvent): void {
-		switch (event.key) {
-			case 'Enter':
-			case ' ':
-				event.preventDefault();
-				isOpen = !isOpen;
-				break;
-			case 'Escape':
-				isOpen = false;
-				break;
-			case 'ArrowDown':
-				if (!isOpen) {
-					event.preventDefault();
-					isOpen = true;
-				}
-				break;
-			case 'ArrowUp':
-				if (isOpen) {
-					event.preventDefault();
-					isOpen = false;
-				}
-				break;
-		}
-	}
-
-	function handleOptionKeyDown(event: KeyboardEvent, dialect: SQLDialect): void {
-		switch (event.key) {
-			case 'Enter':
-			case ' ':
-				event.preventDefault();
-				handleDialectSelect(dialect);
-				break;
-		}
-	}
+	let currentDialect = $state($selectedDialect);
 
 	function handleInputChange(event: Event): void {
 		const target = event.target as HTMLTextAreaElement;
@@ -403,10 +350,8 @@
 	}
 </script>
 
-<svelte:window on:click={handleClickOutside} />
-
 <div class="flex h-full flex-col">
-	<div class="dialect-selector relative mb-2 flex-shrink-0">
+	<div class="mb-2 flex-shrink-0">
 		<label
 			for="sql-dialect-selector"
 			class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -414,57 +359,20 @@
 			SQL Dialect
 		</label>
 
-		<button
+		<Dropdown
 			id="sql-dialect-selector"
-			type="button"
-			class="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 transition-all duration-200 hover:border-gray-400 focus:border-gray-500 focus:ring-2 focus:ring-gray-500/50 dark:border-gray-600 dark:bg-[#111111]/60 dark:text-gray-100 dark:hover:border-gray-500"
-			onclick={() => (isOpen = !isOpen)}
-			onkeydown={handleKeyDownSelector}
-			aria-haspopup="listbox"
-			aria-expanded={isOpen}
-		>
-			<div class="flex items-center gap-3">
-				<Database class="h-4 w-4 {getDialectColor($selectedDialect)}" />
-				<span class="flex-1 text-left font-medium">
-					{$selectedDialect}
-				</span>
-			</div>
-			<ChevronDown
-				class="h-4 w-4 text-gray-400 transition-transform duration-200 {isOpen ? 'rotate-180' : ''}"
-			/>
-		</button>
-
-		{#if isOpen}
-			<div
-				class="dialect-dropdown absolute top-full right-0 left-0 z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800"
-			>
-				<div role="listbox" aria-label="SQL dialects">
-					{#each dialects as dialect, index (index)}
-						<button
-							type="button"
-							class="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-left text-sm text-gray-900 transition-colors duration-150 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none dark:bg-[#111111]/60 {dialect ===
-							$selectedDialect
-								? 'bg-gray-50 text-gray-900 dark:bg-gray-700/50 dark:text-gray-300'
-								: ''} dark:text-gray-100 dark:hover:bg-gray-700"
-							onclick={() => handleDialectSelect(dialect)}
-							onkeydown={(e) => handleOptionKeyDown(e, dialect)}
-							role="option"
-							aria-selected={dialect === $selectedDialect}
-						>
-							<div class="flex items-center gap-3">
-								<Database class="h-4 w-4 {getDialectColor(dialect)}" />
-								<span class="font-medium">
-									{dialect}
-								</span>
-							</div>
-							{#if dialect === $selectedDialect}
-								<div class="h-2 w-2 rounded-full bg-gray-500"></div>
-							{/if}
-						</button>
-					{/each}
-				</div>
-			</div>
-		{/if}
+			options={dialects.map((dialect) => ({
+				value: dialect,
+				label: dialect,
+				icon: Database,
+				iconClass: getDialectColor(dialect)
+			}))}
+			bind:value={currentDialect}
+			onselect={(detail) => {
+				selectedDialect.set(detail.value as SQLDialect);
+				handleParse(true, true);
+			}}
+		/>
 	</div>
 
 	<div
@@ -541,23 +449,6 @@
 	#sql-textarea::-webkit-scrollbar-corner,
 	pre::-webkit-scrollbar-corner {
 		background: #f8fafc;
-	}
-
-	:global(.dialect-dropdown::-webkit-scrollbar) {
-		width: 6px;
-	}
-
-	:global(.dialect-dropdown::-webkit-scrollbar-track) {
-		background: #f1f5f9;
-	}
-
-	:global(.dialect-dropdown::-webkit-scrollbar-thumb) {
-		background: #cbd5e1;
-		border-radius: 3px;
-	}
-
-	:global(.dialect-dropdown::-webkit-scrollbar-thumb:hover) {
-		background: #94a3b8;
 	}
 
 	#sql-textarea:focus {
