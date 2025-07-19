@@ -60,7 +60,6 @@ export default [
 			'no-undef': 'off',
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/no-unused-vars': 'error',
-			'prefer-const': 'error'
 		}
 	},
 	{
