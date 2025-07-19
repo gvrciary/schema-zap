@@ -2,7 +2,7 @@ import { schema, canvasState } from '$lib/stores/app';
 import { showSidebar } from '$lib/stores/ui';
 import { get } from 'svelte/store';
 
-export function fitCanvasToTables() {
+export function fitCanvasToTables(): void {
 	const tables = get(schema);
 
 	if (tables.tables.length === 0) return;
