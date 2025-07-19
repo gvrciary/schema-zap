@@ -1,12 +1,8 @@
 <script lang="ts">
-	import InfiniteCanvas from '$lib/components/InfiniteCanvas.svelte';
-	import TableNode from '$lib/components/TableNode.svelte';
-	import CanvasToolbar from '$lib/components/CanvasToolbar.svelte';
 	import { Database } from 'lucide-svelte';
-	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { schema } from '$lib/stores/app';
 	import { isLoading } from '$lib/stores/ui';
-	import Header from '$lib/components/Header.svelte';
+	import { Header, Sidebar, Toolbar, Canvas } from '$lib/components/layout';
 </script>
 
 <svelte:head>
@@ -37,13 +33,8 @@
 			{/if}
 
 			{#if $schema.tables.length > 0}
-				<InfiniteCanvas>
-					{#snippet children({ table })}
-						<TableNode {table} />
-					{/snippet}
-				</InfiniteCanvas>
-
-				<CanvasToolbar />
+				<Canvas />
+				<Toolbar />
 			{:else}
 				<div class="flex h-full flex-col items-center justify-center p-8">
 					<Database class="mb-4 h-16 w-16  text-gray-300 dark:text-gray-600" />
