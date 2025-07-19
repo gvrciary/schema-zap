@@ -2,7 +2,7 @@
 	import { RotateCcw, ZoomIn, ZoomOut, Tag } from 'lucide-svelte';
 	import { canvasState } from '$lib/stores/app';
 	import { showBadgets } from '$lib/stores/ui';
-	import Button from '$lib/components/ui/Button.svelte';
+	import { Button } from '$lib/components/ui/index';
 	import { cn } from '$lib/utils';
 
 	function resetCanvas(): void {

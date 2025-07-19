@@ -3,7 +3,8 @@
 	import { SQLDialect } from '$lib/types';
 	import { SQL_EXAMPLES } from '$lib/constants';
 	import { RotateCcw, AlertCircle, CheckCircle, Database } from 'lucide-svelte';
-	import { Button, CopyButton, DeleteButton, Dropdown, SQLInput } from '$lib/components/ui';
+	import { Button, CopyButton, DeleteButton, Dropdown } from '$lib/components/ui/index';
+	import SQLInput from '$lib/components/sql/sql-input.svelte';
 	import { sqlInput, selectedDialect } from '$lib/stores/app';
 	import { handleParseSQL } from '$lib/utils/sqlHandler';
 	import { hasMounted } from '$lib/stores/ui';

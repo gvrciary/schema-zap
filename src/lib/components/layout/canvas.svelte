@@ -2,16 +2,10 @@
 	import type { Table, CanvasState } from '$lib/types';
 	import { canvasState, schema } from '$lib/stores/app';
 	import { darkMode, initializeRelations } from '$lib/stores/ui';
-	import RelationshipConnector from './RelationshipConnector.svelte';
+	import Relationships from '$lib/components/sql/relationships.svelte';
 	import { onMount, onDestroy } from 'svelte';
-	import { type Snippet } from 'svelte';
 	import { cssObjectToString, getBackground } from '$lib/utils/background';
-
-	interface Props {
-		children?: Snippet<[{ table: Table; transform: string }]>;
-	}
-
-	const { children }: Props = $props();
+	import Tables from '$lib/components/tables/table.svelte';
 
 	let canvasElement: HTMLDivElement;
 	let isDragging = $state(false);
@@ -373,9 +367,7 @@
 				transform: {getTableTransform(table)};
 			"
 		>
-			{#if children}
-				{@render children({ table, transform: getTableTransform(table) })}
-			{/if}
+			<Tables {table} />
 		</div>
 	{/each}
 
@@ -391,7 +383,7 @@
 		</div>
 	</div>
 
-	<RelationshipConnector />
+	<Relationships />
 </div>
 
 <style>

@@ -4,7 +4,7 @@
 	import { showSidebar, lastParseTime, darkMode } from '$lib/stores/ui';
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
-	import Button from '$lib/components/ui/Button.svelte';
+	import { Button } from '$lib/components/ui/index';
 
 	async function exportSchema(): Promise<void> {
 		const canvas = document.querySelector('.canvas-container') as unknown as HTMLElement;

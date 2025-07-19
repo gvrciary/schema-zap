@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { showSidebar } from '$lib/stores/ui';
-	import SQLQueryInput from './SQLQueryInput.svelte';
-	import SQLSchemaEditor from './SQLSchemaEditor.svelte';
+	import InputEditor from '$lib/components/input-editor.svelte';
+	import VisualEditor from '$lib/components/visual-editor.svelte';
 	import { Code, Settings } from 'lucide-svelte';
-	import Button from '$lib/components/ui/Button.svelte';
+	import { Button }  from '$lib/components/ui/index';
 	import { cn } from '$lib/utils';
 
 	let activeTab = $state('sql');
@@ -56,11 +56,11 @@
 			<div class="flex-1 overflow-hidden">
 				{#if activeTab === 'sql'}
 					<div class="h-full bg-white/90 p-4 dark:bg-[#111111]">
-						<SQLQueryInput />
+						<InputEditor />
 					</div>
 				{:else if activeTab === 'visual'}
 					<div class="h-full bg-white/90 p-4 dark:bg-[#111111]">
-						<SQLSchemaEditor />
+						<VisualEditor />
 					</div>
 				{/if}
 			</div>
