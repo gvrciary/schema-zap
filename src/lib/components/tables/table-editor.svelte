@@ -10,6 +10,7 @@
 		Trash2,
 		GripVertical
 	} from 'lucide-svelte';
+	import { cn } from '$lib/utils';
 
 	export let table: Table;
 	export let tableIndex: number;
@@ -36,26 +37,30 @@
 </script>
 
 <div
-	class="overflow-hidden rounded-lg border border-gray-200 bg-white {isDragging
-		? 'opacity-50'
-		: ''} {isDropTarget
-		? 'border-gray-400 bg-gray-50 dark:border-gray-500 dark:bg-gray-800/50'
-		: ''} dark:border-gray-700 dark:bg-black"
+	class={cn(
+		'overflow-hidden rounded-lg border bg-white',
+		'border-gray-200 dark:border-gray-700 dark:bg-black',
+		isDragging && 'opacity-50',
+		isDropTarget && 'border-gray-400 bg-gray-50 dark:border-gray-500 dark:bg-gray-800/50'
+	)}
 	ondragover={(e) => onTableDragOver(e, tableIndex)}
 	ondrop={(e) => onTableDrop(e, tableIndex)}
 	role="application"
 >
-	<div class="flex items-center justify-between bg-gray-50 px-3 py-2 dark:bg-zinc-900">
+	<div class={cn('flex items-center justify-between px-3 py-2', 'bg-gray-50 dark:bg-zinc-900')}>
 		<div class="flex flex-1 items-center gap-2">
 			<div
-				class="drag-handle cursor-move rounded p-1 transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-600"
+				class={cn(
+					'drag-handle cursor-move rounded p-1 transition-colors duration-150',
+					'hover:bg-gray-200 dark:hover:bg-gray-600'
+				)}
 				title="Drag to reorder"
 				draggable="true"
 				ondragstart={(e) => onTableDragStart(e, tableIndex)}
 				ondragend={onDragEnd}
 				role="application"
 			>
-				<GripVertical class="h-3 w-3 text-gray-600 dark:text-gray-400" />
+				<GripVertical class={cn('h-3 w-3', 'text-gray-600 dark:text-gray-400')} />
 			</div>
 
 			<Button
@@ -63,15 +68,15 @@
 				class="flex flex-1 items-center gap-2 text-left"
 			>
 				{#if isExpanded}
-					<ChevronDown class="h-4 w-4 text-gray-600 dark:text-gray-400" />
+					<ChevronDown class={cn('h-4 w-4', 'text-gray-600 dark:text-gray-400')} />
 				{:else}
-					<ChevronRight class="h-4 w-4 text-gray-600 dark:text-gray-400" />
+					<ChevronRight class={cn('h-4 w-4', 'text-gray-600 dark:text-gray-400')} />
 				{/if}
-				<Database class="h-4 w-4 text-gray-600 dark:text-gray-400" />
-				<span class="max-w-[100px] truncate font-medium text-gray-900 dark:text-gray-100">
+				<Database class={cn('h-4 w-4', 'text-gray-600 dark:text-gray-400')} />
+				<span class={cn('max-w-[100px] truncate font-medium', 'text-gray-900 dark:text-gray-100')}>
 					{table.name}
 				</span>
-				<span class="text-xs text-gray-500 dark:text-gray-400">({table.columns.length})</span>
+				<span class={cn('text-xs', 'text-gray-500 dark:text-gray-400')}>({table.columns.length})</span>
 			</Button>
 		</div>
 
@@ -96,44 +101,51 @@
 	{#if isExpanded}
 		<div class="space-y-2 p-3">
 			{#if table.columns.length === 0}
-				<p class="text-sm text-gray-500 italic dark:text-gray-400">No columns defined</p>
+				<p class={cn('text-sm italic', 'text-gray-500 dark:text-gray-400')}>No columns defined</p>
 			{:else}
 				{#each table.columns as column, columnIndex (column.name)}
 					<div
-						class="flex items-center justify-between rounded border border-gray-300 bg-gray-50 p-2 {draggedColumnIndex ===
-						columnIndex
-							? 'opacity-50'
-							: ''} {dropColumnIndex === columnIndex
-							? 'border-gray-400 bg-gray-100 dark:border-gray-500 dark:bg-gray-800/30'
-							: ''} dark:border-gray-700 dark:bg-zinc-900"
+						class={cn(
+							'flex items-center justify-between rounded border p-2',
+							'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-zinc-900',
+							draggedColumnIndex === columnIndex && 'opacity-50',
+							dropColumnIndex === columnIndex && 'border-gray-400 bg-gray-100 dark:border-gray-500 dark:bg-gray-800/30'
+						)}
 						ondragover={(e) => onColumnDragOver(e, table.name, columnIndex)}
 						ondrop={(e) => onColumnDrop(e, table.name, columnIndex)}
 						role="application"
 					>
 						<div class="flex flex-1 items-center gap-2">
 							<div
-								class="drag-handle cursor-move rounded p-1 transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-500"
+								class={cn(
+									'drag-handle cursor-move rounded p-1 transition-colors duration-150',
+									'hover:bg-gray-200 dark:hover:bg-gray-500'
+								)}
 								title="Drag to reorder"
 								draggable="true"
 								ondragstart={(e) => onColumnDragStart(e, table.name, columnIndex)}
 								ondragend={onDragEnd}
 								role="application"
 							>
-								<GripVertical class="h-3 w-3 text-gray-600 dark:text-gray-400" />
+								<GripVertical class={cn('h-3 w-3', 'text-gray-600 dark:text-gray-400')} />
 							</div>
 
 							<div class="flex flex-col">
-								<span class="font-mono text-sm text-gray-900 dark:text-gray-100">
+								<span class={cn('font-mono text-sm', 'text-gray-900 dark:text-gray-100')}>
 									{column.name}
 								</span>
-								<span class="font-mono text-xs text-gray-500 dark:text-gray-400">
+								<span class={cn('font-mono text-xs', 'text-gray-500 dark:text-gray-400')}>
 									{column.type}
 								</span>
 							</div>
 
 							{#if column.primaryKey}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 font-mono text-xs',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 									title="Primary Key"
 								>
 									PK
@@ -141,7 +153,11 @@
 							{/if}
 							{#if column.foreignKey}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 font-mono text-xs',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 									title="Foreign Key → {column.foreignKey.table}.{column.foreignKey.column}"
 								>
 									FK
@@ -149,7 +165,11 @@
 							{/if}
 							{#if column.autoIncrement}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 font-mono text-xs',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 									title="Auto Increment"
 								>
 									AI
@@ -157,7 +177,11 @@
 							{/if}
 							{#if !column.nullable}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 font-mono text-xs',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 									title="Not Null"
 								>
 									NN
@@ -165,7 +189,11 @@
 							{/if}
 							{#if column.unique}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 font-mono text-xs',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 									title="Unique"
 								>
 									UQ
@@ -173,7 +201,11 @@
 							{/if}
 							{#if column.defaultValue}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 font-mono text-xs',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 									title="Default: {column.defaultValue}"
 								>
 									DF

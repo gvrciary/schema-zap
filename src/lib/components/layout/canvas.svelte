@@ -6,6 +6,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { cssObjectToString, getBackground } from '$lib/utils/background';
 	import Tables from '$lib/components/tables/table.svelte';
+	import { cn } from '$lib/utils';
 
 	let canvasElement: HTMLDivElement;
 	let isDragging = $state(false);
@@ -266,7 +267,7 @@
 		}
 	}
 
-	function handleKeyDown(event: KeyboardEvent) : void {
+	function handleKeyDown(event: KeyboardEvent): void {
 		if (event.ctrlKey || event.metaKey) {
 			switch (event.key) {
 				case '0':
@@ -299,7 +300,11 @@
 		return `translate(${screenPos.x}px, ${screenPos.y}px) scale(${$canvasState.zoom})`;
 	}
 
-	function getSchemaSummary(): { tableCount: number; columnCount: number; relationshipCount: number } {
+	function getSchemaSummary(): {
+		tableCount: number;
+		columnCount: number;
+		relationshipCount: number;
+	} {
 		const tableCount = $schema.tables.length;
 		const columnCount = $schema.tables.reduce((sum, table) => sum + table.columns.length, 0);
 		const relationshipCount = $schema.relationships.length;
@@ -327,7 +332,7 @@
 			y: (touch1.clientY + touch2.clientY) / 2
 		};
 	}
-	
+
 	const background = $derived(cssObjectToString(getBackground($canvasState, $darkMode)));
 	const summary = $derived(getSchemaSummary());
 </script>
@@ -344,9 +349,10 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
 	bind:this={canvasElement}
-	class="canvas-container relative h-full w-full overflow-hidden bg-gray-50 {isDragging
-		? 'cursor-grabbing'
-		: 'cursor-grab'} dark:bg-[#111111]/50"
+	class={cn(
+		'canvas-container relative h-full w-full overflow-hidden bg-gray-50 dark:bg-[#111111]/50',
+		isDragging ? 'cursor-grabbing' : 'cursor-grab'
+	)}
 	onwheel={handleWheel}
 	onmousedown={handleMouseDown}
 	role="application"
@@ -356,13 +362,16 @@
 	{#each $schema.tables as table, index (index)}
 		<div
 			data-table-name={table.name}
-			class="absolute top-0 left-0 origin-top-left {$canvasState.draggedTable === table.name
-				? 'z-[1000] cursor-grabbing'
-				: $canvasState.selectedTable === table.name
-					? 'z-[100] cursor-grab'
-					: 'z-10 cursor-grab'} {$canvasState.draggedTable === table.name
-				? 'dragging'
-				: ''} {$canvasState.selectedTable === table.name ? 'selected' : ''}"
+			class={cn(
+				'absolute top-0 left-0 origin-top-left',
+				$canvasState.draggedTable === table.name
+					? 'z-[1000] cursor-grabbing'
+					: $canvasState.selectedTable === table.name
+						? 'z-[100] cursor-grab'
+						: 'z-10 cursor-grab',
+				$canvasState.draggedTable === table.name && 'dragging',
+				$canvasState.selectedTable === table.name && 'selected'
+			)}
 			style="
 				transform: {getTableTransform(table)};
 			"

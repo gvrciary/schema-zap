@@ -5,6 +5,7 @@
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
 	import { Button } from '$lib/components/ui/index';
+	import { cn } from '$lib/utils';
 
 	async function exportSchema(): Promise<void> {
 		const canvas = document.querySelector('.canvas-container') as unknown as HTMLElement;
@@ -46,7 +47,10 @@
 </script>
 
 <header
-	class="flex flex-shrink-0 items-center justify-between border-b border-gray-200 bg-white px-3 py-3 shadow-sm sm:px-6 sm:py-4 dark:border-gray-700 dark:bg-[#111111]"
+	class={cn(
+		'flex flex-shrink-0 items-center justify-between border-b px-3 py-3 shadow-sm sm:px-6 sm:py-4',
+		'border-gray-200 bg-white dark:border-gray-700 dark:bg-[#111111]'
+	)}
 >
 	<div class="flex items-center gap-2 sm:gap-3">
 		<h1 class="text-lg font-bold text-gray-900 sm:text-2xl dark:text-gray-300">SchemaZap</h1>
@@ -54,7 +58,7 @@
 
 	<div class="flex items-center gap-1 sm:gap-2">
 		{#if $lastParseTime}
-			<div class="hidden text-xs text-gray-500 sm:block dark:text-gray-400">
+			<div class={cn('hidden text-xs sm:block', 'text-gray-500 dark:text-gray-400')}>
 				Updated: {$lastParseTime.toLocaleTimeString()}
 			</div>
 		{/if}

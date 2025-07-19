@@ -26,6 +26,7 @@
 	} from 'lucide-svelte';
 	import { canvasState } from '$lib/stores/app';
 	import { showBadgets } from '$lib/stores/ui';
+	import { cn } from '$lib/utils';
 
 	interface Props {
 		table: Table;
@@ -133,9 +134,12 @@
 
 <div
 	id="table-{table.name.toLowerCase()}"
-	class="table-node max-w-96 min-w-[290px] rounded-lg border border-white/30 bg-white/90 shadow-lg select-none dark:border-gray-600 dark:bg-black/90"
-	class:dragging={isDragging}
-	class:selected={isSelected}
+	class={cn(
+		'table-node max-w-96 min-w-[290px] rounded-lg border shadow-lg select-none',
+		'border-white/30 bg-white/90 dark:border-gray-600 dark:bg-black/90',
+		isDragging && 'dragging',
+		isSelected && 'selected'
+	)}
 	style="transform: {isDragging
 		? 'translate3d(0, 0, 0) rotate(1deg) scale(1.05)'
 		: 'translate3d(0, 0, 0)'};
@@ -154,32 +158,42 @@
 	bind:this={box}
 >
 	<div
-		class="flex items-center justify-between rounded-t-lg border-b border-gray-600/5 bg-white/90 px-4 py-3 dark:border-gray-600/50 dark:bg-black/90"
+		class={cn(
+			'flex items-center justify-between rounded-t-lg border-b px-4 py-3',
+			'border-gray-600/5 bg-white/90 dark:border-gray-600/50 dark:bg-black/90'
+		)}
 	>
 		<div class="flex items-center gap-2">
-			<TableIcon class="h-4 w-4 text-gray-600 dark:text-gray-400" />
+			<TableIcon class={cn('h-4 w-4', 'text-gray-600 dark:text-gray-400')} />
 			<h3
-				class="max-w-40 min-w-40 overflow-hidden font-semibold overflow-ellipsis whitespace-nowrap text-gray-900 dark:text-gray-100"
+				class={cn(
+					'max-w-40 min-w-40 overflow-hidden font-semibold overflow-ellipsis whitespace-nowrap',
+					'text-gray-900 dark:text-gray-100'
+				)}
 				title={table.name}
 			>
 				{table.name}
 			</h3>
 		</div>
-		<div class="ml-2 flex-shrink-0 text-xs text-gray-500 dark:text-gray-400">
+		<div class={cn('ml-2 flex-shrink-0 text-xs', 'text-gray-500 dark:text-gray-400')}>
 			({table.columns.length})
 		</div>
 	</div>
 
 	<div
-		class="table-columns max-h-[60vh] overflow-y-auto border-t border-gray-600/5 dark:border-gray-600/50"
+		class={cn(
+			'table-columns max-h-[60vh] overflow-y-auto border-t',
+			'border-gray-600/5 dark:border-gray-600/50'
+		)}
 	>
 		{#each table.columns as column, index (index)}
 			{@const IconComponent = getColumnTypeIcon(column)}
 			<div
-				class="bg-white/50 px-4 py-2 transition-colors duration-150 hover:bg-white/70 dark:bg-black/90 dark:hover:bg-zinc-900 {index >
-				0
-					? 'border-t border-gray-600/5 dark:border-gray-600/50'
-					: ''}"
+				class={cn(
+					'px-4 py-2 transition-colors duration-150',
+					'bg-white/50 hover:bg-white/70 dark:bg-black/90 dark:hover:bg-zinc-900',
+					index > 0 && 'border-t border-gray-600/5 dark:border-gray-600/50'
+				)}
 				title="Column: {column.name} ({column.type}){column.nullable
 					? ''
 					: ' - NOT NULL'}{column.defaultValue ? ` - Default: ${column.defaultValue}` : ''}"
@@ -187,22 +201,32 @@
 				<div class="flex items-center justify-between">
 					<div class="min-w-0 flex-1">
 						<div class="flex items-center gap-2">
-							<IconComponent class="h-3 w-3 text-gray-600 dark:text-gray-400" />
+							<IconComponent class={cn('h-3 w-3', 'text-gray-600 dark:text-gray-400')} />
 							<span
-								class="max-w-40 min-w-40 overflow-hidden text-sm text-ellipsis whitespace-nowrap text-gray-900 {column.primaryKey
-									? 'font-semibold'
-									: ''} dark:text-gray-100"
+								class={cn(
+									'max-w-40 min-w-40 overflow-hidden text-sm text-ellipsis whitespace-nowrap',
+									'text-gray-900 dark:text-gray-100',
+									column.primaryKey && 'font-semibold'
+								)}
 							>
 								{column.name}
 							</span>
 						</div>
-						<div class="flex items-center gap-2 font-mono text-xs text-gray-600 dark:text-gray-400">
+						<div
+							class={cn(
+								'flex items-center gap-2 font-mono text-xs',
+								'text-gray-600 dark:text-gray-400'
+							)}
+						>
 							<span class="truncate">
 								{formatColumnType(column.type)}
 							</span>
 							{#if column.foreignKey}
 								<span
-									class="flex flex-shrink-0 items-center gap-1 text-gray-600 dark:text-gray-400"
+									class={cn(
+										'flex flex-shrink-0 items-center gap-1',
+										'text-gray-600 dark:text-gray-400'
+									)}
 								>
 									<Link class="h-2.5 w-2.5" />
 									→ {column.foreignKey.table}.{column.foreignKey.column}
@@ -215,7 +239,11 @@
 						<div class="ml-2 flex flex-shrink-0 flex-wrap gap-1">
 							{#each getColumnBadges(column) as badge, index (index)}
 								<span
-									class="rounded border border-gray-300 bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-800 dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300"
+									class={cn(
+										'rounded border px-1.5 py-0.5 text-xs font-medium',
+										'border-gray-300 bg-gray-100 text-gray-800',
+										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
+									)}
 								>
 									{badge}
 								</span>
@@ -226,7 +254,7 @@
 
 				{#if column.defaultValue}
 					<div class="mt-1 pl-5">
-						<span class="text-xs text-gray-500 dark:text-gray-400">
+						<span class={cn('text-xs', 'text-gray-500 dark:text-gray-400')}>
 							Default: <span class="font-mono">{column.defaultValue}</span>
 						</span>
 					</div>
