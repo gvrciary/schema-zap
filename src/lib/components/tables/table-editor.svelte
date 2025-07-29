@@ -39,7 +39,7 @@
 <div
 	class={cn(
 		'overflow-hidden rounded-lg border bg-white',
-		'border-gray-200 dark:border-gray-700 dark:bg-black',
+		'border-gray-200 dark:border-gray-700 dark:bg-zinc-900',
 		isDragging && 'opacity-50',
 		isDropTarget && 'border-gray-400 bg-gray-50 dark:border-gray-500 dark:bg-gray-800/50'
 	)}
