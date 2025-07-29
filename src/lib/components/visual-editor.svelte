@@ -712,7 +712,12 @@
 
 	<div slot="footer">
 		<Button variant="ghost" onClick={() => (editTableForm.isVisible = false)}>Cancel</Button>
-		<Button variant="default" onClick={saveTableChanges}>Save Changes</Button>
+		<Button
+			variant="default"
+			disabled={editTableForm.originalName === editTableForm.name ||
+				!isValidTableName(editTableForm.name)}
+			onClick={saveTableChanges}>Save Changes</Button
+		>
 	</div>
 </Modal>
 
