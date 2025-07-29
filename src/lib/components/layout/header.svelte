@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { Maximize2, Minimize2, Download, Sun, Moon } from 'lucide-svelte';
+	import { Maximize2, Minimize2, Download } from 'lucide-svelte';
 	import { schema, canvasState } from '$lib/stores/app';
-	import { showSidebar, lastParseTime, darkMode } from '$lib/stores/ui';
+	import { showSidebar, lastParseTime } from '$lib/stores/ui';
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
-	import { Button } from '$lib/components/ui/index';
+	import { Button, ToggleTheme } from '$lib/components/ui/index';
+	import { mode } from 'mode-watcher';
 	import { cn } from '$lib/utils';
 
 	async function exportSchema(): Promise<void> {
@@ -14,7 +15,7 @@
 
 		await document.fonts.ready;
 
-		const background = getBackground($canvasState, $darkMode);
+		const background = getBackground($canvasState, mode.current === 'dark');
 
 		const date = new Date();
 
@@ -40,10 +41,6 @@
 	function toggleSidebar(): void {
 		showSidebar.set(!$showSidebar);
 	}
-
-	function toggleDarkMode(): void {
-		darkMode.toggle();
-	}
 </script>
 
 <header
@@ -64,18 +61,7 @@
 		{/if}
 
 		<div class="flex items-center gap-1">
-			<Button
-				variant="icon"
-				size="sm"
-				onClick={toggleDarkMode}
-				title={$darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-			>
-				{#if $darkMode}
-					<Sun class="h-4 w-4" />
-				{:else}
-					<Moon class="h-4 w-4" />
-				{/if}
-			</Button>
+			<ToggleTheme />
 
 			<Button
 				variant="icon"

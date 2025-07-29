@@ -1,15 +1,9 @@
 <script lang="ts">
 	import '$lib/styles/app.css';
-	import { browser } from '$app/environment';
-	import { darkMode } from '$lib/stores/ui';
+	import { ModeWatcher } from 'mode-watcher';
 
 	const { children } = $props();
-
-	$effect(() => {
-		if (browser) {
-			document.documentElement.classList.toggle('dark', $darkMode);
-		}
-	});
 </script>
 
+<ModeWatcher />
 {@render children()}

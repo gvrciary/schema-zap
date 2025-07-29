@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { Table, CanvasState } from '$lib/types';
 	import { canvasState, schema } from '$lib/stores/app';
-	import { darkMode, initializeRelations } from '$lib/stores/ui';
+	import { initializeRelations } from '$lib/stores/ui';
+	import { mode } from 'mode-watcher';
 	import Relationships from '$lib/components/sql/relationships.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { cssObjectToString, getBackground } from '$lib/utils/background';
@@ -333,7 +334,7 @@
 		};
 	}
 
-	const background = $derived(cssObjectToString(getBackground($canvasState, $darkMode)));
+	const background = $derived(cssObjectToString(getBackground($canvasState, mode.current === 'dark')));
 	const summary = $derived(getSchemaSummary());
 </script>
 

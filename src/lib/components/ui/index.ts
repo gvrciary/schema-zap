@@ -3,3 +3,4 @@ export { default as Button } from './button.svelte';
 export { default as Dropdown } from './dropdown.svelte';
 export { default as CopyButton } from './copy-button.svelte';
 export { default as DeleteButton } from './delete-button.svelte';
+export { default as ToggleTheme } from './toggle-theme.svelte';
