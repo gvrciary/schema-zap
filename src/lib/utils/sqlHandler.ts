@@ -1,4 +1,4 @@
-import { isLoading, lastParseTime } from '$lib/stores/ui';
+import { isLoading } from '$lib/stores/ui';
 import { schema, selectedDialect, sqlInput } from '$lib/stores/app';
 import { get } from 'svelte/store';
 import { parseSQL } from '$lib/parsers/sql-parser';
@@ -10,7 +10,6 @@ export function handleParseSQL(
 	resetPositions: boolean = false
 ): SyntaxParseResult {
 	const sql = get(sqlInput);
-	lastParseTime.set(new Date());
 
 	if (!sql.trim()) {
 		schema.set({ tables: [], relationships: [] });

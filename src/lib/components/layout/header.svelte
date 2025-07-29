@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { Maximize2, Minimize2, Download } from 'lucide-svelte';
 	import { schema, canvasState } from '$lib/stores/app';
-	import { showSidebar, lastParseTime } from '$lib/stores/ui';
+	import { showSidebar } from '$lib/stores/ui';
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
 	import { Button, ToggleTheme } from '$lib/components/ui/index';
 	import { mode } from 'mode-watcher';
 	import { cn } from '$lib/utils';
+	import GithubIcon from '$lib/assets/github-icon.svelte';
 
 	async function exportSchema(): Promise<void> {
 		const canvas = document.querySelector('.canvas-container') as unknown as HTMLElement;
@@ -50,41 +51,44 @@
 	)}
 >
 	<div class="flex items-center gap-2 sm:gap-3">
+		<img src="/icon.svg" alt="SchemaZap Logo" class="h-8 w-8" />
 		<h1 class="text-lg font-bold text-gray-900 sm:text-2xl dark:text-gray-300">SchemaZap</h1>
 	</div>
 
 	<div class="flex items-center gap-1 sm:gap-2">
-		{#if $lastParseTime}
-			<div class={cn('hidden text-xs sm:block', 'text-gray-500 dark:text-gray-400')}>
-				Updated: {$lastParseTime.toLocaleTimeString()}
-			</div>
-		{/if}
+		<Button
+			variant="icon"
+			size="sm"
+			onClick={exportSchema}
+			title="Export to PNG"
+			disabled={$schema.tables.length === 0}
+		>
+			<GithubIcon />
+		</Button>
 
-		<div class="flex items-center gap-1">
-			<ToggleTheme />
+		<ToggleTheme />
 
-			<Button
-				variant="icon"
-				size="sm"
-				onClick={exportSchema}
-				title="Export to PNG"
-				disabled={$schema.tables.length === 0}
-			>
-				<Download class="h-4 w-4" />
-			</Button>
+		<Button
+			variant="icon"
+			size="sm"
+			onClick={exportSchema}
+			title="Export to PNG"
+			disabled={$schema.tables.length === 0}
+		>
+			<Download class="h-4 w-4" />
+		</Button>
 
-			<Button
-				variant="icon"
-				size="sm"
-				onClick={toggleSidebar}
-				title={$showSidebar ? 'Hide sidebar' : 'Show sidebar'}
-			>
-				{#if $showSidebar}
-					<Minimize2 class="h-4 w-4" />
-				{:else}
-					<Maximize2 class="h-4 w-4" />
-				{/if}
-			</Button>
-		</div>
+		<Button
+			variant="icon"
+			size="sm"
+			onClick={toggleSidebar}
+			title={$showSidebar ? 'Hide sidebar' : 'Show sidebar'}
+		>
+			{#if $showSidebar}
+				<Minimize2 class="h-4 w-4" />
+			{:else}
+				<Maximize2 class="h-4 w-4" />
+			{/if}
+		</Button>
 	</div>
 </header>
