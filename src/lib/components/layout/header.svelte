@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Maximize2, Minimize2, Download } from 'lucide-svelte';
+	import { Download } from 'lucide-svelte';
 	import { schema, canvasState } from '$lib/stores/app';
-	import { showSidebar } from '$lib/stores/ui';
+
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
 	import { Button, ToggleTheme } from '$lib/components/ui/index';
@@ -38,10 +38,6 @@
 			console.error('Error generating image:', error);
 		}
 	}
-
-	function toggleSidebar(): void {
-		showSidebar.set(!$showSidebar);
-	}
 </script>
 
 <header
@@ -63,7 +59,7 @@
 			title="Export to PNG"
 			disabled={$schema.tables.length === 0}
 		>
-			<GithubIcon />
+			<GithubIcon className="h-4 w-4" />
 		</Button>
 
 		<ToggleTheme />
@@ -76,19 +72,6 @@
 			disabled={$schema.tables.length === 0}
 		>
 			<Download class="h-4 w-4" />
-		</Button>
-
-		<Button
-			variant="icon"
-			size="sm"
-			onClick={toggleSidebar}
-			title={$showSidebar ? 'Hide sidebar' : 'Show sidebar'}
-		>
-			{#if $showSidebar}
-				<Minimize2 class="h-4 w-4" />
-			{:else}
-				<Maximize2 class="h-4 w-4" />
-			{/if}
 		</Button>
 	</div>
 </header>

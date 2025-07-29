@@ -2,8 +2,8 @@
 	import { showSidebar } from '$lib/stores/ui';
 	import InputEditor from '$lib/components/input-editor.svelte';
 	import VisualEditor from '$lib/components/visual-editor.svelte';
-	import { Code, Settings } from 'lucide-svelte';
-	import { Button }  from '$lib/components/ui/index';
+	import { Code, Settings, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Button } from '$lib/components/ui/index';
 	import { cn } from '$lib/utils';
 
 	let activeTab = $state('sql');
@@ -11,12 +11,24 @@
 	function setActiveTab(tab: string): void {
 		activeTab = tab;
 	}
+
+	function toggleSidebar(): void {
+		showSidebar.set(!$showSidebar);
+	}
 </script>
 
 {#if $showSidebar}
 	<aside
-		class="w-96 flex-shrink-0 overflow-hidden border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
+		class="relative w-72 flex-shrink-0 border-r border-gray-200 bg-white sm:w-80 md:w-96 dark:border-gray-700 dark:bg-gray-900"
 	>
+		<Button
+			onClick={toggleSidebar}
+			class="absolute top-1/2 -right-3 z-50 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800 cursor-pointer"
+			title="Hide sidebar"
+		>
+			<ChevronLeft class="h-6 w-6 text-gray-600 dark:text-gray-300" />
+		</Button>
+
 		<div class="flex h-full flex-col">
 			<div
 				class="flex-shrink-0 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-[#111111]"
@@ -66,4 +78,15 @@
 			</div>
 		</div>
 	</aside>
+{:else}
+	<div class="relative">
+		<div class="h-full w-6 bg-gray-50 dark:bg-zinc-900"></div>
+		<Button
+			onClick={toggleSidebar}
+			class="absolute top-1/2 -right-3 z-50 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800 cursor-pointer"
+			title="Show sidebar"
+		>
+			<ChevronRight class="h-6 w-6 text-gray-600 dark:text-gray-300" />
+		</Button>
+	</div>
 {/if}
