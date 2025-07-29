@@ -52,15 +52,11 @@
 	</div>
 
 	<div class="flex items-center gap-1 sm:gap-2">
-		<Button
-			variant="icon"
-			size="sm"
-			onClick={exportSchema}
-			title="Export to PNG"
-			disabled={$schema.tables.length === 0}
-		>
-			<GithubIcon className="h-4 w-4" />
-		</Button>
+		<a href="https://github.com/gvrciary/schema-zap" target="_blank" rel="noopener noreferrer">
+			<Button variant="icon" size="sm" title="Github Repository">
+				<GithubIcon className="h-4 w-4" />
+			</Button>
+		</a>
 
 		<ToggleTheme />
 
