@@ -1,7 +1,7 @@
 ## `Schema Zap` - Convert SQL queries into visual database diagrams instantly
 
 <div align="center">
-<img src="public/og-image.png" width="650px">
+<img src="static/og-image.png" width="650px">
 
 ![Svelte](https://img.shields.io/badge/Svelte-111111?style=for-the-badge&logo=svelte&logoColor=FF3E00)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-111111?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8)
