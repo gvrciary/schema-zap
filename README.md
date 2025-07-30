@@ -38,9 +38,9 @@ SchemaZap is a powerful web application that transforms your SQL DDL (Data Defin
    ```
 
 3. **Run in development mode**
-  ```bash
-  npm run dev
-  ```
+    ```bash
+    npm run dev
+    ```
 
 ## License
 
