@@ -1,38 +1,47 @@
-# sv
+## `Schema Zap` - Convert SQL queries into visual database diagrams instantly
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+<div align="center">
+<img src="public/og-image.png" width="650px">
 
-## Creating a project
+![Svelte](https://img.shields.io/badge/Svelte-111111?style=for-the-badge&logo=svelte&logoColor=FF3E00)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-111111?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8)
+![TypeScript](https://img.shields.io/badge/TypeScript-111111?style=for-the-badge&logo=typescript&logoColor=3178C6)
 
-If you're seeing this, you've probably already done this step. Congrats!
+</div>
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Whats is Schema Zap?
 
-# create a new project in my-app
-npx sv create my-app
-```
+SchemaZap is a powerful web application that transforms your SQL DDL (Data Definition Language) statements into beautiful, interactive database schema diagrams. Perfect for developers, database architects, and data modelers who want to visualize and understand database structures at a glance.
 
-## Developing
+### Features
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- **SQL to Visual**: Convert CREATE TABLE statements into interactive diagrams
+- **Multi-Dialect Support**: Works with MySQL, PostgreSQL, SQLite, and MariaDB
+- **Smart Relationships**: Automatically detects and visualizes table relationships
+- **Interactive Canvas**: Drag, zoom, and pan to organize your schema
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Dark/Light Theme**: Switch between themes for comfortable viewing
+- **Export to PNG**: Download your diagrams as high-quality images
+- **Real-time Parsing**: Instant visual feedback as you type SQL
 
-```bash
-npm run dev
+## Installation
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/gvrciary/schema-zap.git
+   cd schema-zap
+   ```
 
-## Building
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-To create a production version of your app:
+3. **Run in development mode**
+  ```bash
+  npm run dev
+  ```
 
-```bash
-npm run build
-```
+## License
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+[![LICENSE - Apache 2.0 by gvrciary](https://img.shields.io/badge/LICENSE-Apache%202.0-111111?style=for-the-badge&labelColor=111111&logo=open-source-initiative&logoColor=white)](LICENSE)
