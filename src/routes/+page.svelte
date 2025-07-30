@@ -5,11 +5,6 @@
 	import { Header, Sidebar, Toolbar, Canvas } from '$lib/components/layout';
 </script>
 
-<svelte:head>
-	<title>SchemaZap</title>
-	<meta name="description" content="Visual database schema editor with SQL DDL parsing" />
-</svelte:head>
-
 <div class="flex h-screen flex-col bg-gray-50 dark:bg-zinc-900">
 	<Header />
 
