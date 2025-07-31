@@ -363,6 +363,9 @@
 		visualTables = [...visualTables];
 		editTableForm.isVisible = false;
 		updateSQLAndSchema();
+		toast.success('Success!', {
+			description: `The table "${editTableForm.originalName}" has been renamed to "${editTableForm.name}".`
+		});
 	}
 
 	function removeTable(tableName: string): void {
@@ -384,6 +387,9 @@
 		}
 		visualTables = [...visualTables];
 		updateSQLAndSchema();
+		toast.success('Success!', {
+			description: `The table "${tableName}" has been removed successfully.`
+		});
 	}
 
 	function initNewColumnForm(tableName: string): void {
@@ -488,6 +494,9 @@
 		visualTables = [...visualTables];
 		showColumnForm = false;
 		updateSQLAndSchema();
+		toast.success('Success!', {
+			description: `The column "${columnForm.name}" has been ${columnForm.isEdit ? 'updated' : 'added'} successfully.`
+		});
 	}
 
 	function removeColumn(tableName: string, columnName: string): void {
@@ -508,6 +517,9 @@
 
 		visualTables = [...visualTables];
 		updateSQLAndSchema();
+		toast.success('Success!', {
+			description: `The column "${columnName}" has been removed successfully from table "${tableName}".`
+		});
 	}
 
 	function toggleTableExpansion(tableName: string): void {
@@ -573,7 +585,7 @@
 
 <div class="flex h-full flex-col">
 	<div
-		class="flex flex-shrink-0 items-center justify-between border-b border-gray-200 pb-2 mb-4 dark:border-gray-600"
+		class="mb-4 flex flex-shrink-0 items-center justify-between border-b border-gray-200 pb-2 dark:border-gray-600"
 	>
 		<div class="flex items-center gap-4">
 			<span class="text-sm font-medium text-gray-900 dark:text-gray-100">Schema Editor</span>
