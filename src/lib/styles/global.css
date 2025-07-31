@@ -4,6 +4,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+    
 	body {
 		font-family: 'JetBrains Mono Variable', sans-serif !important;
 		text-rendering: optimizeLegibility;
