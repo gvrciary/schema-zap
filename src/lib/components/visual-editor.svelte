@@ -571,9 +571,9 @@
 	}
 </script>
 
-<div class="flex h-full w-full flex-col">
+<div class="flex h-full flex-col">
 	<div
-		class="flex flex-shrink-0 items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-600"
+		class="flex flex-shrink-0 items-center justify-between border-b border-gray-200 pb-2 mb-4 dark:border-gray-600"
 	>
 		<div class="flex items-center gap-4">
 			<span class="text-sm font-medium text-gray-900 dark:text-gray-100">Schema Editor</span>
@@ -594,7 +594,7 @@
 		</div>
 	</div>
 
-	<div class="min-h-0 flex-1 overflow-y-auto p-4">
+	<div class="min-h-0 flex-1 overflow-y-auto">
 		{#if visualTables.length === 0}
 			<div class="py-8 text-center text-gray-500 dark:text-gray-400">
 				{#if $sqlInput.trim()}

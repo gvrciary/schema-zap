@@ -1,6 +1,7 @@
 import { schema, canvasState } from '$lib/stores/app';
 import { showSidebar } from '$lib/stores/ui';
 import { get } from 'svelte/store';
+import type { Column } from '$lib/types';
 
 export function fitCanvasToTables(): void {
 	const tables = get(schema);
@@ -57,3 +58,16 @@ export function fitCanvasToTables(): void {
 		draggedTable: get(canvasState).draggedTable
 	});
 }
+
+export function getColumnBadges(column: Column): string[] {
+		const badges: string[] = [];
+
+		if (column.primaryKey) badges.push('PK');
+		if (column.foreignKey) badges.push('FK');
+		if (column.unique && !column.primaryKey) badges.push('UQ');
+		if (column.autoIncrement) badges.push('AI');
+		if (!column.nullable) badges.push('NN');
+		if (column.defaultValue) badges.push('DF');
+
+		return badges;
+	}

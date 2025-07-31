@@ -11,6 +11,8 @@
 		GripVertical
 	} from 'lucide-svelte';
 	import { cn } from '$lib/utils';
+	import { getColumnBadges } from '$lib/utils/canvas';
+	import Badget from '../ui/badget.svelte';
 
 	export let table: Table;
 	export let tableIndex: number;
@@ -139,77 +141,12 @@
 								</span>
 							</div>
 
-							{#if column.primaryKey}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 font-mono text-xs',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-									title="Primary Key"
-								>
-									PK
-								</span>
-							{/if}
-							{#if column.foreignKey}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 font-mono text-xs',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-									title="Foreign Key → {column.foreignKey.table}.{column.foreignKey.column}"
-								>
-									FK
-								</span>
-							{/if}
-							{#if column.autoIncrement}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 font-mono text-xs',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-									title="Auto Increment"
-								>
-									AI
-								</span>
-							{/if}
-							{#if !column.nullable}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 font-mono text-xs',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-									title="Not Null"
-								>
-									NN
-								</span>
-							{/if}
-							{#if column.unique}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 font-mono text-xs',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-									title="Unique"
-								>
-									UQ
-								</span>
-							{/if}
-							{#if column.defaultValue}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 font-mono text-xs',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-									title="Default: {column.defaultValue}"
-								>
-									DF
-								</span>
+							{#if getColumnBadges(column).length > 0}
+								<div class="ml-2 flex-shrink-0 flex-wrap gap-1 hidden md:flex">
+									{#each getColumnBadges(column) as badge, index (index)}
+										<Badget title={badge} />
+									{/each}
+								</div>
 							{/if}
 						</div>
 

@@ -27,6 +27,8 @@
 	import { canvasState } from '$lib/stores/app';
 	import { showBadgets } from '$lib/stores/ui';
 	import { cn } from '$lib/utils';
+	import Badget from '$lib/components/ui/badget.svelte';
+	import { getColumnBadges } from '$lib/utils/canvas';
 
 	interface Props {
 		table: Table;
@@ -117,18 +119,6 @@
 			return type.substring(0, 17) + '...';
 		}
 		return type;
-	}
-
-	function getColumnBadges(column: Column): string[] {
-		const badges: string[] = [];
-
-		if (column.primaryKey) badges.push('PK');
-		if (column.foreignKey) badges.push('FK');
-		if (column.unique && !column.primaryKey) badges.push('UQ');
-		if (column.autoIncrement) badges.push('AI');
-		if (!column.nullable) badges.push('NN');
-
-		return badges;
 	}
 </script>
 
@@ -238,15 +228,7 @@
 					{#if $showBadgets && getColumnBadges(column).length > 0}
 						<div class="ml-2 flex flex-shrink-0 flex-wrap gap-1">
 							{#each getColumnBadges(column) as badge, index (index)}
-								<span
-									class={cn(
-										'rounded border px-1.5 py-0.5 text-xs font-medium',
-										'border-gray-300 bg-gray-100 text-gray-800',
-										'dark:border-gray-600 dark:bg-zinc-800 dark:text-gray-300'
-									)}
-								>
-									{badge}
-								</span>
+								<Badget title={badge} />
 							{/each}
 						</div>
 					{/if}

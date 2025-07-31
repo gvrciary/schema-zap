@@ -8,7 +8,7 @@
 	import Canvas from '$lib/components/layout/canvas.svelte';
 </script>
 
-<div class="flex h-screen flex-col bg-gray-50 dark:bg-zinc-900">
+<div class="flex h-dvh flex-col bg-gray-50 dark:bg-zinc-900">
 	<Header />
 
 	<main class="flex flex-1 overflow-hidden">

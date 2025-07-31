@@ -23,7 +23,7 @@
 	>
 		<Button
 			onClick={toggleSidebar}
-			class="absolute top-1/2 -right-3 z-50 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800 cursor-pointer"
+			class="absolute top-1/2 -right-3 z-50 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800"
 			title="Hide sidebar"
 		>
 			<ChevronLeft class="h-6 w-6 text-gray-600 dark:text-gray-300" />
@@ -65,15 +65,11 @@
 				</nav>
 			</div>
 
-			<div class="flex-1 overflow-hidden">
+			<div class="h-full flex-1 overflow-hidden bg-white/90 p-4 dark:bg-[#111111]">
 				{#if activeTab === 'sql'}
-					<div class="h-full bg-white/90 p-4 dark:bg-[#111111]">
-						<InputEditor />
-					</div>
+					<InputEditor />
 				{:else if activeTab === 'visual'}
-					<div class="h-full bg-white/90 p-4 dark:bg-[#111111]">
-						<VisualEditor />
-					</div>
+					<VisualEditor />
 				{/if}
 			</div>
 		</div>
@@ -83,7 +79,7 @@
 		<div class="h-full w-6 bg-gray-50 dark:bg-zinc-900"></div>
 		<Button
 			onClick={toggleSidebar}
-			class="absolute top-1/2 -right-3 z-50 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800 cursor-pointer"
+			class="absolute top-1/2 -right-3 z-50 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800"
 			title="Show sidebar"
 		>
 			<ChevronRight class="h-6 w-6 text-gray-600 dark:text-gray-300" />
