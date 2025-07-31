@@ -6,7 +6,6 @@
 	import Sidebar from '$lib/components/layout/sidebar.svelte';
 	import Toolbar from '$lib/components/layout/toolbar.svelte';
 	import Canvas from '$lib/components/layout/canvas.svelte';
-	
 </script>
 
 <div class="flex h-screen flex-col bg-gray-50 dark:bg-zinc-900">
