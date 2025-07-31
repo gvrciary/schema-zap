@@ -4,7 +4,8 @@
 	import { SQL_DATA_TYPES, REQUIRED_LENGTH_TYPES, OPTIONAL_LENGTH_TYPES } from '$lib/constants';
 	import { handleParseSQL } from '$lib/utils/sqlHandler';
 	import { Plus, Trash2, Database, MessageCircleXIcon } from 'lucide-svelte';
-	import { Modal, Button } from '$lib/components/ui/index';
+	import Button from '$lib/components/ui/button.svelte';
+	import Modal from '$lib/components/ui/modal.svelte';
 	import TableEditor from '$lib/components/tables/table-editor.svelte';
 
 	let visualTables: Table[] = $state([]);

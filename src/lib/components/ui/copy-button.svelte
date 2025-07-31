@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Check, Copy } from 'lucide-svelte';
-	import { Button } from './index';
+	import Button from './button.svelte';
 
 	export let text: string = '';
 	export let variant: 'default' | 'ghost' | 'icon' = 'icon';

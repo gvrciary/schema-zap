@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Table, Column } from '$lib/types';
-	import { Button } from '$lib/components/ui/index';
+	import Button from '$lib/components/ui/button.svelte';
 	import {
 		ChevronDown,
 		ChevronRight,

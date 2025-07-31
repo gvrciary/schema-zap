@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toggleMode, mode } from 'mode-watcher';
-	import { Button } from '$lib/components/ui';
+	import Button from '$lib/components/ui/button.svelte';
 	import { Sun, Moon } from 'lucide-svelte';
 </script>
 

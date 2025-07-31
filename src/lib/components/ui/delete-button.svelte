@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Check, X, Trash2 } from 'lucide-svelte';
-	import { Button } from './index';
+	import Button from './button.svelte';
 
 	export let variant: 'default' | 'ghost' | 'icon' = 'icon';
 	export let size: 'sm' | 'md' | 'lg' = 'sm';

@@ -4,7 +4,8 @@
 
 	import { toPng } from 'html-to-image';
 	import { getBackground } from '$lib/utils/background';
-	import { Button, ToggleTheme } from '$lib/components/ui/index';
+	import Button from '$lib/components/ui/button.svelte';
+	import ToggleTheme from '$lib/components/ui/toggle-theme.svelte';
 	import { mode } from 'mode-watcher';
 	import { cn } from '$lib/utils';
 	import GithubIcon from '$lib/assets/github-icon.svelte';
