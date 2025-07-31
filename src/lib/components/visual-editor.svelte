@@ -7,6 +7,7 @@
 	import Button from '$lib/components/ui/button.svelte';
 	import Modal from '$lib/components/ui/modal.svelte';
 	import TableEditor from '$lib/components/tables/table-editor.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let visualTables: Table[] = $state([]);
 	let expandedTables: Set<string> = $state(new Set());
@@ -327,6 +328,9 @@
 		newTableName = '';
 		showNewTableForm = false;
 		updateSQLAndSchema(true, false);
+		toast.success('Success!', {
+			description: `The table "${newTable.name}" has been created successfully.`
+		});
 	}
 
 	function editTable(tableName: string): void {

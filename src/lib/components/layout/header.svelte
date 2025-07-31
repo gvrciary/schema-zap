@@ -9,6 +9,7 @@
 	import { mode } from 'mode-watcher';
 	import { cn } from '$lib/utils';
 	import GithubIcon from '$lib/assets/github-icon.svelte';
+	import { toast } from 'svelte-sonner';
 
 	async function exportSchema(): Promise<void> {
 		const canvas = document.querySelector('.canvas-container') as unknown as HTMLElement;
@@ -20,24 +21,28 @@
 		const background = getBackground($canvasState, mode.current === 'dark');
 
 		const date = new Date();
+		
+		const dataUrl = toPng(canvas as HTMLElement, {
+			skipFonts: true,
+			style: background,
+			filter: (node) => {
+				return !node.classList?.contains('info');
+			}
+		});
 
-		try {
-			const dataUrl = await toPng(canvas as HTMLElement, {
-				skipFonts: true,
-				style: background,
-				filter: (node) => {
-					return !node.classList?.contains('info');
-				}
-			});
-			const link = document.createElement('a');
-			const pad = (n: number): string => n.toString().padStart(2, '0');
-			const formattedDate = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}_${pad(date.getHours())}-${pad(date.getMinutes())}-${pad(date.getSeconds())}`;
-			link.download = `diagram-${formattedDate}.png`;
-			link.href = dataUrl;
-			link.click();
-		} catch (error) {
-			console.error('Error generating image:', error);
-		}
+		toast.promise(dataUrl, {
+			loading: 'Generating image...',
+			success: (data) => {
+				const link = document.createElement('a');
+				const pad = (n: number): string => n.toString().padStart(2, '0');
+				const formattedDate = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}_${pad(date.getHours())}-${pad(date.getMinutes())}-${pad(date.getSeconds())}`;
+				link.download = `diagram-${formattedDate}.png`;
+				link.href = data;
+				link.click();
+				return 'Downloaded successfully!';
+			},
+			error: 'Error generating image'
+		});
 	}
 </script>
 
