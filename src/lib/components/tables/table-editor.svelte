@@ -12,8 +12,8 @@
 	} from 'lucide-svelte';
 	import { cn } from '$lib/utils';
 	import { getColumnBadges } from '$lib/utils/canvas';
-	import Badget from '../ui/badget.svelte';
-	import MenuBar from '../ui/menu-bar.svelte';
+	import Badget from '$lib/components/ui/badget.svelte';
+	import MenuBar from '$lib/components/ui/menu-bar.svelte';
 
 	export let table: Table;
 	export let tableIndex: number;
