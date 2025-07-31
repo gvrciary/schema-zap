@@ -112,7 +112,7 @@
 </script>
 
 <div class="flex h-full flex-col">
-	<div class="mb-4 flex-shrink-0">
+	<div class="mb-3 flex-shrink-0">
 		<label
 			for="sql-dialect-selector"
 			class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"

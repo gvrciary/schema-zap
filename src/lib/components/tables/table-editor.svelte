@@ -13,6 +13,7 @@
 	import { cn } from '$lib/utils';
 	import { getColumnBadges } from '$lib/utils/canvas';
 	import Badget from '../ui/badget.svelte';
+	import MenuBar from '../ui/menu-bar.svelte';
 
 	export let table: Table;
 	export let tableIndex: number;
@@ -78,25 +79,24 @@
 				<span class={cn('max-w-[100px] truncate font-medium', 'text-gray-900 dark:text-gray-100')}>
 					{table.name}
 				</span>
-				<span class={cn('text-xs', 'text-gray-500 dark:text-gray-400')}>({table.columns.length})</span>
+				<span class={cn('text-xs', 'text-gray-500 dark:text-gray-400')}
+					>({table.columns.length})</span
+				>
 			</Button>
 		</div>
-
 		<div class="flex items-center gap-1">
-			<Button variant="table" size="sm" onClick={() => onEditTable(table.name)} title="Edit table">
-				<Pencil class="h-3 w-3" />
-			</Button>
-			<Button variant="table" size="sm" onClick={() => onAddColumn(table.name)} title="Add column">
-				<Plus class="h-3 w-3" />
-			</Button>
-			<Button
-				variant="table"
-				size="sm"
-				onClick={() => onRemoveTable(table.name)}
-				title="Remove table"
-			>
-				<Trash2 class="h-3 w-3" />
-			</Button>
+			<MenuBar
+				options={[
+					{ label: 'Edit Table', icon: Pencil, onClick: () => onEditTable(table.name) },
+					{ label: 'Add Column', icon: Plus, onClick: () => onAddColumn(table.name) },
+					{
+						label: 'Remove Table',
+						icon: Trash2,
+						onClick: () => onRemoveTable(table.name),
+						iconClass: 'text-red-500'
+					}
+				]}
+			/>
 		</div>
 	</div>
 
@@ -111,7 +111,8 @@
 							'flex items-center justify-between rounded border p-2',
 							'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-zinc-900',
 							draggedColumnIndex === columnIndex && 'opacity-50',
-							dropColumnIndex === columnIndex && 'border-gray-400 bg-gray-100 dark:border-gray-500 dark:bg-gray-800/30'
+							dropColumnIndex === columnIndex &&
+								'border-gray-400 bg-gray-100 dark:border-gray-500 dark:bg-gray-800/30'
 						)}
 						ondragover={(e) => onColumnDragOver(e, table.name, columnIndex)}
 						ondrop={(e) => onColumnDrop(e, table.name, columnIndex)}
@@ -142,7 +143,7 @@
 							</div>
 
 							{#if getColumnBadges(column).length > 0}
-								<div class="ml-2 flex-shrink-0 flex-wrap gap-1 hidden md:flex">
+								<div class="ml-2 hidden flex-shrink-0 flex-wrap gap-1 md:flex">
 									{#each getColumnBadges(column) as badge, index (index)}
 										<Badget title={badge} />
 									{/each}

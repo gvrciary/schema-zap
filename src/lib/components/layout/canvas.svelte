@@ -301,18 +301,6 @@
 		return `translate(${screenPos.x}px, ${screenPos.y}px) scale(${$canvasState.zoom})`;
 	}
 
-	function getSchemaSummary(): {
-		tableCount: number;
-		columnCount: number;
-		relationshipCount: number;
-	} {
-		const tableCount = $schema.tables.length;
-		const columnCount = $schema.tables.reduce((sum, table) => sum + table.columns.length, 0);
-		const relationshipCount = $schema.relationships.length;
-
-		return { tableCount, columnCount, relationshipCount };
-	}
-
 	function getTouchDistance(touches: TouchList): number {
 		if (touches.length < 2) return 0;
 		const touch1 = touches[0];
@@ -334,8 +322,9 @@
 		};
 	}
 
-	const background = $derived(cssObjectToString(getBackground($canvasState, mode.current === 'dark')));
-	const summary = $derived(getSchemaSummary());
+	const background = $derived(
+		cssObjectToString(getBackground($canvasState, mode.current === 'dark'))
+	);
 </script>
 
 <svelte:window
@@ -380,19 +369,6 @@
 			<Tables {table} />
 		</div>
 	{/each}
-
-	<div class="info pointer-events-none absolute top-2.5 right-2.5 z-[1000]">
-		<div
-			class="rounded bg-white/50 px-2 py-1 text-xs text-gray-500 shadow-xl backdrop-blur-md dark:bg-gray-800/50 dark:text-gray-400"
-		>
-			{#if summary.tableCount > 0}
-				{summary.tableCount} tables • {summary.columnCount} columns • {summary.relationshipCount} relations
-			{:else}
-				No tables available
-			{/if}
-		</div>
-	</div>
-
 	<Relationships />
 </div>
 

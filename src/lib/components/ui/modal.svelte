@@ -40,7 +40,7 @@
 
 {#if open}
 	<div
-		class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+		class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 md:px-0"
 		on:click={handleOverlayClick}
 		on:keydown={handleKeydown}
 		role="dialog"
