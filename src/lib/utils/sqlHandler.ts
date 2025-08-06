@@ -6,44 +6,44 @@ import { fitCanvasToTables } from '$lib/utils/canvas';
 import type { SyntaxParseResult } from '$lib/types';
 
 export function handleParseSQL(
-	resetZoom: boolean = false,
-	resetPositions: boolean = false
+  resetZoom: boolean = false,
+  resetPositions: boolean = false
 ): SyntaxParseResult {
-	const sql = get(sqlInput);
+  const sql = get(sqlInput);
 
-	if (!sql.trim()) {
-		schema.set({ tables: [], relationships: [] });
-		return {
-			success: false,
-			error: 'SQL input is empty'
-		};
-	}
+  if (!sql.trim()) {
+    schema.set({ tables: [], relationships: [] });
+    return {
+      success: false,
+      error: 'SQL input is empty'
+    };
+  }
 
-	isLoading.set(true);
+  isLoading.set(true);
 
-	try {
-		const result = parseSQL(sql, get(selectedDialect), resetPositions);
+  try {
+    const result = parseSQL(sql, get(selectedDialect), resetPositions);
 
-		if (result.schema) {
-			schema.set(result.schema);
-		}
+    if (result.schema) {
+      schema.set(result.schema);
+    }
 
-		if (result.success) {
-			if (resetZoom && result.schema && result.schema.tables.length > 0) {
-				fitCanvasToTables();
-			}
+    if (result.success) {
+      if (resetZoom && result.schema && result.schema.tables.length > 0) {
+        fitCanvasToTables();
+      }
 
-			return {
-				success: true
-			};
-		}
+      return {
+        success: true
+      };
+    }
 
-		return {
-			success: false,
-			error: result.error?.message || 'Failed to parse SQL',
-			statementIndex: result.error?.statementIndex || -1
-		};
-	} finally {
-		isLoading.set(false);
-	}
+    return {
+      success: false,
+      error: result.error?.message || 'Failed to parse SQL',
+      statementIndex: result.error?.statementIndex || -1
+    };
+  } finally {
+    isLoading.set(false);
+  }
 }
