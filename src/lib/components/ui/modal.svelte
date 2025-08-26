@@ -1,11 +1,28 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
+  import type { Snippet } from 'svelte';
 
-  export let open: boolean = false;
-  export let size: 'sm' | 'md' | 'lg' = 'md';
-  export let closeOnOverlayClick: boolean = true;
-  export let closeOnEscape: boolean = true;
-  export let onClose: (() => void) | undefined = undefined;
+  interface Props {
+    open: boolean;
+    size?: 'sm' | 'md' | 'lg';
+    closeOnOverlayClick?: boolean;
+    closeOnEscape?: boolean;
+    onClose?: () => void;
+    title?: Snippet;
+    children?: Snippet;
+    footer?: Snippet;
+  }
+
+  let {
+    open = false,
+    size = 'md',
+    closeOnOverlayClick = true,
+    closeOnEscape = true,
+    onClose = undefined,
+    title,
+    children,
+    footer
+  }: Props = $props();
 
   const sizes = {
     sm: 'w-full max-w-sm',
@@ -29,11 +46,13 @@
     onClose?.();
   }
 
-  $: if (open && typeof window !== 'undefined') {
-    document.body.style.overflow = 'hidden';
-  } else if (typeof window !== 'undefined') {
-    document.body.style.overflow = '';
-  }
+  $effect(() => {
+    if (open && typeof window !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    } else if (typeof window !== 'undefined') {
+      document.body.style.overflow = '';
+    }
+  });
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -41,8 +60,8 @@
 {#if open}
   <div
     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm md:px-0"
-    on:click={handleOverlayClick}
-    on:keydown={handleKeydown}
+    onclick={handleOverlayClick}
+    onkeydown={handleKeydown}
     role="dialog"
     aria-modal="true"
     tabindex="-1"
@@ -50,25 +69,25 @@
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div
       class={cn('rounded-lg bg-white p-6 shadow-2xl dark:bg-[#111111]', sizes[size])}
-      on:click|stopPropagation
-      on:keydown|stopPropagation
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.stopPropagation()}
       role="document"
     >
-      {#if $$slots.title}
+      {#if title}
         <div class="mb-4">
           <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            <slot name="title" />
+            {@render title()}
           </h3>
         </div>
       {/if}
 
       <div class="space-y-4">
-        <slot />
+        {@render children?.()}
       </div>
 
-      {#if $$slots.footer}
+      {#if footer}
         <div class="mt-6 flex justify-end gap-3">
-          <slot name="footer" />
+          {@render footer()}
         </div>
       {/if}
     </div>

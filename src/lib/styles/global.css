@@ -27,13 +27,6 @@
   }
 }
 
-@media print {
-  * {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
 @media (prefers-contrast: high) {
   * {
     border-color: currentColor;

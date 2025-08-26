@@ -2,13 +2,25 @@
   import { Check, X, Trash2 } from 'lucide-svelte';
   import Button from './button.svelte';
 
-  export let variant: 'default' | 'ghost' | 'icon' = 'icon';
-  export let size: 'sm' | 'md' | 'lg' = 'sm';
-  export let title: string = 'Delete';
-  export let disabled: boolean = false;
-  export let onConfirm: (() => void) | undefined = undefined;
+  interface Props {
+    variant?: 'default' | 'ghost' | 'icon';
+    size?: 'sm' | 'md' | 'lg';
+    title?: string;
+    disabled?: boolean;
+    onConfirm?: () => void;
+    [key: string]: any;
+  }
 
-  let showConfirmation = false;
+  let {
+    variant = 'icon',
+    size = 'sm',
+    title = 'delete',
+    disabled = false,
+    onConfirm = undefined,
+    ...restProps
+  }: Props = $props();
+
+  let showConfirmation = $state(false);
 
   function handleDelete() {
     if (disabled) return;
@@ -35,7 +47,7 @@
     </Button>
   </div>
 {:else}
-  <Button {variant} {size} {title} {disabled} onClick={handleDelete} {...$$restProps}>
+  <Button {variant} {size} {title} {disabled} onClick={handleDelete} {...restProps}>
     <Trash2 class="h-4 w-4" />
   </Button>
 {/if}

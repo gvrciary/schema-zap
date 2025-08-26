@@ -9,7 +9,7 @@
   import Dropdown from '$lib/components/ui/dropdown.svelte';
   import SQLInput from '$lib/components/sql/sql-input.svelte';
   import { sqlInput, selectedDialect } from '$lib/stores/app';
-  import { handleParseSQL } from '$lib/utils/sqlHandler';
+  import { handleParseSQL } from '$lib/handlers/sqlHandler';
   import { hasMounted } from '$lib/stores/ui';
 
   onMount(() => {

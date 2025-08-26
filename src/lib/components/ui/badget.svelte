@@ -1,7 +1,11 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
 
-  export let title: string;
+  interface Props {
+    title: string;
+  }
+
+  let { title = '' }: Props = $props();
 </script>
 
 <span

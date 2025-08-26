@@ -1,31 +1,46 @@
 <script lang="ts">
   import { Check, Copy } from 'lucide-svelte';
   import Button from './button.svelte';
+  import { toast } from 'svelte-sonner';
 
-  export let text: string = '';
-  export let variant: 'default' | 'ghost' | 'icon' = 'icon';
-  export let size: 'sm' | 'md' | 'lg' = 'sm';
-  export let title: string = 'Copy to clipboard';
-  export let disabled: boolean = false;
+  interface Props {
+    text: string;
+    variant?: 'default' | 'ghost' | 'icon';
+    size?: 'sm' | 'md' | 'lg';
+    title?: string;
+    disabled?: boolean;
+    [key: string]: any;
+  }
 
-  let isCopied = false;
+  let {
+    text = '',
+    variant = 'icon',
+    size = 'sm',
+    title = 'Copy to clipboard',
+    disabled = false,
+    ...restProps
+  }: Props = $props();
+
+  let isCopied = $state(false);
 
   async function copyToClipboard() {
     if (!text.trim() || disabled) return;
 
-    try {
-      await navigator.clipboard.writeText(text);
-      isCopied = true;
-      setTimeout(() => {
-        isCopied = false;
-      }, 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
+    toast.promise(navigator.clipboard.writeText(text), {
+      loading: 'Copying to clipboard...',
+      success: () => {
+        isCopied = true;
+        setTimeout(() => {
+          isCopied = false;
+        }, 2000);
+        return 'Copied to clipboard!';
+      },
+      error: 'Failed to copy to clipboard.'
+    });
   }
 </script>
 
-<Button {variant} {size} {title} {disabled} onClick={copyToClipboard} {...$$restProps}>
+<Button {variant} {size} {title} {disabled} onClick={copyToClipboard} {...restProps}>
   {#if isCopied}
     <Check class="h-4 w-4 animate-pulse" />
   {:else}

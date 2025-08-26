@@ -1,12 +1,27 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
 
-  export let variant: 'default' | 'ghost' | 'icon' | 'table' = 'default';
-  export let size: 'sm' | 'md' | 'lg' = 'md';
-  export let disabled: boolean = false;
-  export let title: string = '';
-  export let type: 'button' | 'submit' | 'reset' = 'button';
-  export let onClick: (() => void) | undefined = undefined;
+  interface Props {
+    variant?: 'default' | 'ghost' | 'icon' | 'table';
+    size?: 'sm' | 'md' | 'lg';
+    disabled?: boolean;
+    title?: string;
+    type?: 'button' | 'submit' | 'reset';
+    onClick?: () => void;
+    children: import('svelte').Snippet;
+    [key: string]: any;
+  }
+
+  let {
+    variant = 'default',
+    size = 'md',
+    disabled = false,
+    title = '',
+    type = 'button',
+    onClick = undefined,
+    children,
+    ...restProps
+  }: Props = $props();
 
   const variants = {
     default:
@@ -44,17 +59,21 @@
       'cursor-pointer rounded transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center'
   };
 
-  $: currentSizes =
-    variant === 'icon' ? sizes.icon : variant === 'table' ? sizes.table : sizes.default;
-  $: currentBaseClasses =
+  let currentSizes = $derived(() =>
+    variant === 'icon' ? sizes.icon : variant === 'table' ? sizes.table : sizes.default
+  );
+
+  let currentBaseClasses = $derived(() =>
     variant === 'icon'
       ? baseClasses.icon
       : variant === 'table'
         ? baseClasses.table
-        : baseClasses.default;
-  $: classes = cn(currentBaseClasses, variants[variant], currentSizes[size]);
+        : baseClasses.default
+  );
+
+  let classes = $derived(() => cn(currentBaseClasses, variants[variant], currentSizes()[size]));
 </script>
 
-<button {type} {title} {disabled} class={classes} on:click={onClick} on:click {...$$restProps}>
-  <slot />
+<button {type} {title} {disabled} class={classes} onclick={onClick} {...restProps}>
+  {@render children()}
 </button>

@@ -14,29 +14,52 @@
   import { getColumnBadges } from '$lib/utils/canvas';
   import Badget from '$lib/components/ui/badget.svelte';
   import MenuBar from '$lib/components/ui/menu-bar.svelte';
-
-  export let table: Table;
-  export let tableIndex: number;
-  export let isExpanded: boolean = false;
-  export let isDragging: boolean = false;
-  export let isDropTarget: boolean = false;
-  export let draggedColumnIndex: number = -1;
-  export let dropColumnIndex: number = -1;
-
-  export let onToggleExpansion: (tableName: string) => void;
-  export let onEditTable: (tableName: string) => void;
-  export let onAddColumn: (tableName: string) => void;
-  export let onRemoveTable: (tableName: string) => void;
-  export let onEditColumn: (tableName: string, column: Column) => void;
-  export let onRemoveColumn: (tableName: string, columnName: string) => void;
-
-  export let onTableDragStart: (e: DragEvent, index: number) => void;
-  export let onTableDragOver: (e: DragEvent, index: number) => void;
-  export let onTableDrop: (e: DragEvent, index: number) => void;
-  export let onColumnDragStart: (e: DragEvent, tableName: string, index: number) => void;
-  export let onColumnDragOver: (e: DragEvent, tableName: string, index: number) => void;
-  export let onColumnDrop: (e: DragEvent, tableName: string, index: number) => void;
-  export let onDragEnd: () => void;
+  
+  interface Props {
+    table: Table;
+    tableIndex: number;
+    isExpanded?: boolean;
+    isDragging?: boolean;
+    isDropTarget?: boolean;
+    draggedColumnIndex?: number;
+    dropColumnIndex?: number;
+    onToggleExpansion: (tableName: string) => void;
+    onEditTable: (tableName: string) => void;
+    onAddColumn: (tableName: string) => void;
+    onRemoveTable: (tableName: string) => void;
+    onEditColumn: (tableName: string, column: Column) => void;
+    onRemoveColumn: (tableName: string, columnName: string) => void;
+    onTableDragStart: (e: DragEvent, index: number) => void;
+    onTableDragOver: (e: DragEvent, index: number) => void;
+    onTableDrop: (e: DragEvent, index: number) => void;
+    onColumnDragStart: (e: DragEvent, tableName: string, index: number) => void;
+    onColumnDragOver: (e: DragEvent, tableName: string, index: number) => void;
+    onColumnDrop: (e: DragEvent, tableName: string, index: number) => void;
+    onDragEnd: () => void;
+  }
+  
+  let {
+    table,
+    tableIndex,
+    isExpanded = false,
+    isDragging = false,
+    isDropTarget = false,
+    draggedColumnIndex = -1,
+    dropColumnIndex = -1,
+    onToggleExpansion,
+    onEditTable,
+    onAddColumn,
+    onRemoveTable,
+    onEditColumn,
+    onRemoveColumn,
+    onTableDragStart,
+    onTableDragOver,
+    onTableDrop,
+    onColumnDragStart,
+    onColumnDragOver,
+    onColumnDrop,
+    onDragEnd
+  }: Props = $props();
 </script>
 
 <div

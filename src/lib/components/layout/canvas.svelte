@@ -340,7 +340,7 @@
 <div
   bind:this={canvasElement}
   class={cn(
-    'canvas-container relative h-full w-full overflow-hidden bg-gray-50 dark:bg-[#111111]/50',
+    'canvas-container relative h-full w-full overflow-hidden bg-gray-50 dark:bg-[#111111]/50 focus:outline-none',
     isDragging ? 'cursor-grabbing' : 'cursor-grab'
   )}
   onwheel={handleWheel}
@@ -359,8 +359,8 @@
           : $canvasState.selectedTable === table.name
             ? 'z-[100] cursor-grab'
             : 'z-10 cursor-grab',
-        $canvasState.draggedTable === table.name && 'dragging',
-        $canvasState.selectedTable === table.name && 'selected'
+        $canvasState.draggedTable === table.name && 'drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]',
+        $canvasState.selectedTable === table.name && 'drop-shadow-[0_4px_12px_rgba(59,130,246,0.5)]'
       )}
       style="
 				transform: {getTableTransform(table)};
@@ -381,17 +381,5 @@
     touch-action: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  .canvas-container:focus {
-    outline: none;
-  }
-
-  .dragging {
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-  }
-
-  .selected {
-    filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.5));
   }
 </style>

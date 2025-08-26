@@ -2,7 +2,7 @@
   import { sqlInput, selectedDialect, schema } from '$lib/stores/app';
   import { SQLDialect, type Table, type Column } from '$lib/types';
   import { SQL_DATA_TYPES, REQUIRED_LENGTH_TYPES, OPTIONAL_LENGTH_TYPES } from '$lib/constants';
-  import { handleParseSQL } from '$lib/utils/sqlHandler';
+  import { handleParseSQL } from '$lib/handlers/sqlHandler';
   import { Plus, Trash2, Database, MessageCircleXIcon } from 'lucide-svelte';
   import Button from '$lib/components/ui/button.svelte';
   import Modal from '$lib/components/ui/modal.svelte';
@@ -195,10 +195,6 @@
     dragState.dragColumnName = '';
     dragState.dropIndex = -1;
     dragState.dropTableName = '';
-  }
-
-  function handleDragEnd(): void {
-    resetDragState();
   }
 
   function requiresLength(dataType: string): boolean {
@@ -448,9 +444,7 @@
   function saveColumn(): void {
     if (!columnForm.name.trim() || !columnForm.type) return;
 
-    if (requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0)) {
-      return;
-    }
+    if (requiresLength(columnForm.type) && (!columnForm.length || columnForm.length <= 0)) return;
 
     const tableIndex = visualTables.findIndex((t) => t.name === columnForm.tableName);
     if (tableIndex === -1) return;
@@ -660,7 +654,7 @@
             onColumnDragStart={handleColumnDragStart}
             onColumnDragOver={handleColumnDragOver}
             onColumnDrop={handleColumnDrop}
-            onDragEnd={handleDragEnd}
+            onDragEnd={resetDragState}
           />
         {/each}
       </div>
@@ -676,7 +670,9 @@
     newTableName = '';
   }}
 >
-  <span slot="title">New Table</span>
+  {#snippet title()}
+    <span>New Table</span>
+  {/snippet}
 
   <div>
     <label for="table-name" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -692,7 +688,7 @@
     />
   </div>
 
-  <div slot="footer">
+  {#snippet footer()}
     <Button
       variant="ghost"
       onClick={() => {
@@ -705,11 +701,13 @@
     <Button variant="default" onClick={addTable} disabled={!isValidTableName(newTableName)}>
       Create Table
     </Button>
-  </div>
+  {/snippet}
 </Modal>
 
 <Modal open={editTableForm.isVisible} size="md" onClose={() => (editTableForm.isVisible = false)}>
-  <span slot="title">Edit Table</span>
+  {#snippet title()}
+    <span>Edit Table</span>
+  {/snippet}
 
   <div>
     <label
@@ -727,7 +725,7 @@
     />
   </div>
 
-  <div slot="footer">
+  {#snippet footer()}
     <Button variant="ghost" onClick={() => (editTableForm.isVisible = false)}>Cancel</Button>
     <Button
       variant="default"
@@ -735,11 +733,13 @@
         !isValidTableName(editTableForm.name)}
       onClick={saveTableChanges}>Save Changes</Button
     >
-  </div>
+  {/snippet}
 </Modal>
 
 <Modal open={showColumnForm} size="lg" onClose={() => (showColumnForm = false)}>
-  <span slot="title">{columnForm.isEdit ? 'Edit' : 'New'} Column</span>
+  {#snippet title()}
+    <span>{columnForm.isEdit ? 'Edit' : 'New'} Column</span>
+  {/snippet}
 
   <div>
     <label
@@ -936,7 +936,7 @@
     {/if}
   </div>
 
-  <div slot="footer">
+  {#snippet footer()}
     <Button variant="ghost" onClick={() => (showColumnForm = false)}>Cancel</Button>
     <Button
       variant="default"
@@ -958,7 +958,7 @@
     >
       {columnForm.isEdit ? 'Save' : 'Add'} Column
     </Button>
-  </div>
+  {/snippet}
 </Modal>
 
 <style>
