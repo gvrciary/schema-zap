@@ -52,15 +52,15 @@
     'border-gray-200 bg-white dark:border-gray-700 dark:bg-[#111111]'
   )}
 >
-  <div class="flex items-center gap-2 sm:gap-3">
+  <div class="flex items-center gap-2 md:gap-3">
     <img src="/icon.svg" alt="SchemaZap Logo" class="h-8 w-8" />
     <h1 class="text-lg font-bold text-gray-900 md:text-xl dark:text-gray-300">SchemaZap</h1>
   </div>
 
-  <div class="flex items-center gap-1 sm:gap-2">
+  <div class="flex items-center gap-3 md:gap-4">
     <a href="https://github.com/gvrciary/schema-zap" target="_blank" rel="noopener noreferrer">
       <Button variant="icon" size="sm" title="Github Repository">
-        <GithubIcon className="h-4 w-4" />
+        <GithubIcon class="h-4 w-4" />
       </Button>
     </a>
 
