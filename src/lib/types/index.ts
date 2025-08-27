@@ -75,3 +75,13 @@ export interface TypeAndLength {
   baseType: string;
   length: number | undefined;
 }
+
+export interface DragState {
+  isDragging: boolean;
+  dragType: 'table' | 'column' | '';
+  dragIndex: number;
+  dragTableName: string;
+  dragColumnName: string;
+  dropIndex: number;
+  dropTableName: string;
+}

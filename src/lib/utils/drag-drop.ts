@@ -1,14 +1,4 @@
-import type { Table } from '$lib/types';
-
-export interface DragState {
-  isDragging: boolean;
-  dragType: 'table' | 'column' | '';
-  dragIndex: number;
-  dragTableName: string;
-  dragColumnName: string;
-  dropIndex: number;
-  dropTableName: string;
-}
+import type { Table, DragState } from '$lib/types';
 
 export function createDragState(): DragState {
   return {

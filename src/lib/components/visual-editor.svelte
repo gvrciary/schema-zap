@@ -21,8 +21,8 @@
     handleColumnDragStart,
     handleColumnDragOver,
     handleColumnDrop,
-    type DragState
   } from '$lib/utils/drag-drop';
+  import type { DragState } from '$lib/types';
 
   let visualTables: Table[] = $state([]);
   let expandedTables: Set<string> = $state(new Set());
