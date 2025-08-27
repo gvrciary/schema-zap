@@ -57,7 +57,7 @@
     <h1 class="text-lg font-bold text-gray-900 md:text-xl dark:text-gray-300">SchemaZap</h1>
   </div>
 
-  <div class="flex items-center gap-3 md:gap-4">
+  <div class="flex items-center gap-1 md:gap-2">
     <a href="https://github.com/gvrciary/schema-zap" target="_blank" rel="noopener noreferrer">
       <Button variant="icon" size="sm" title="Github Repository">
         <GithubIcon class="h-4 w-4" />

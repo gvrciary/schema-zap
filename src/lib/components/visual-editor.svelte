@@ -960,22 +960,3 @@
     </Button>
   {/snippet}
 </Modal>
-
-<style>
-  :global(.max-h-\[90vh\]::-webkit-scrollbar) {
-    width: 6px;
-  }
-
-  :global(.max-h-\[90vh\]::-webkit-scrollbar-track) {
-    background: #f1f5f9;
-  }
-
-  :global(.max-h-\[90vh\]::-webkit-scrollbar-thumb) {
-    background: #cbd5e1;
-    border-radius: 3px;
-  }
-
-  :global(.max-h-\[90vh\]::-webkit-scrollbar-thumb:hover) {
-    background: #94a3b8;
-  }
-</style>

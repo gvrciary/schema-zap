@@ -154,7 +154,7 @@
         {/if}
       </div>
 
-      <div class="flex flex-shrink-0 items-center gap-2">
+      <div class="flex flex-shrink-0 items-center gap-1">
         <Button variant="icon" size="sm" title="Load sample SQL" onClick={loadSample}>
           <RotateCcw class="h-4 w-4" />
         </Button>

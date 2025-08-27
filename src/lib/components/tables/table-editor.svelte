@@ -14,7 +14,7 @@
   import { getColumnBadges } from '$lib/utils/canvas';
   import Badget from '$lib/components/ui/badget.svelte';
   import MenuBar from '$lib/components/ui/menu-bar.svelte';
-  
+
   interface Props {
     table: Table;
     tableIndex: number;
@@ -37,7 +37,7 @@
     onColumnDrop: (e: DragEvent, tableName: string, index: number) => void;
     onDragEnd: () => void;
   }
-  
+
   let {
     table,
     tableIndex,
@@ -107,19 +107,46 @@
         >
       </Button>
     </div>
-    <div class="flex items-center gap-1">
-      <MenuBar
-        options={[
-          { label: 'Edit Table', icon: Pencil, onClick: () => onEditTable(table.name) },
-          { label: 'Add Column', icon: Plus, onClick: () => onAddColumn(table.name) },
-          {
-            label: 'Remove Table',
-            icon: Trash2,
-            onClick: () => onRemoveTable(table.name),
-            iconClass: 'text-red-500'
-          }
-        ]}
-      />
+    <div class="flex items-center">
+      {#if table.columns.length < 2 || !isExpanded}
+        <Button
+          variant="icon"
+          size="sm"
+          onClick={() => onEditTable(table.name)}
+          title="Edit table"
+        >
+          <Pencil class="h-3 w-3" />
+        </Button>
+        <Button
+          variant="icon"
+          size="sm"
+          onClick={() => onAddColumn(table.name)}
+          title="Add column"
+        >
+          <Plus class="h-3 w-3" />
+        </Button>
+        <Button
+          variant="icon"
+          size="sm"
+          onClick={() => onRemoveTable(table.name)}
+          title="Remove table"
+        >
+          <Trash2 class="h-3 w-3" />
+        </Button>
+      {:else}
+        <MenuBar
+          options={[
+            { label: 'Edit Table', icon: Pencil, onClick: () => onEditTable(table.name) },
+            { label: 'Add Column', icon: Plus, onClick: () => onAddColumn(table.name) },
+            {
+              label: 'Remove Table',
+              icon: Trash2,
+              onClick: () => onRemoveTable(table.name),
+              iconClass: 'text-red-500'
+            }
+          ]}
+        />
+      {/if}
     </div>
   </div>
 
