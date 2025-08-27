@@ -70,3 +70,8 @@ export interface SyntaxParseResult {
   error?: string;
   statementIndex?: number;
 }
+
+export interface TypeAndLength {
+  baseType: string;
+  length: number | undefined;
+}

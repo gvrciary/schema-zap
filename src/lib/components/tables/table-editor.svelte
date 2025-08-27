@@ -77,7 +77,7 @@
     <div class="flex flex-1 items-center gap-2">
       <div
         class={cn(
-          'drag-handle cursor-move rounded p-1 transition-colors duration-150',
+          'opacity-60 transition-opacity duration-200 ease-in-out hover:opacity-100',
           'hover:bg-gray-200 dark:hover:bg-gray-600'
         )}
         title="Drag to reorder"
@@ -171,7 +171,7 @@
             <div class="flex flex-1 items-center gap-2">
               <div
                 class={cn(
-                  'drag-handle cursor-move rounded p-1 transition-colors duration-150',
+                  'opacity-60 transition-opacity duration-200 ease-in-out hover:opacity-100 cursor-move rounded p-1',
                   'hover:bg-gray-200 dark:hover:bg-gray-500'
                 )}
                 title="Drag to reorder"
@@ -227,15 +227,6 @@
 </div>
 
 <style>
-  .drag-handle {
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
-  }
-
-  .drag-handle:hover {
-    opacity: 1;
-  }
-
   [draggable='true'] {
     cursor: move;
   }
