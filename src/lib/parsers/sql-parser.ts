@@ -1,8 +1,6 @@
 import pkg from 'node-sql-parser';
 import { SQLDialect } from '$lib/types';
 import type { Table, Column, Relationship, ParseResult } from '$lib/types';
-import { schema } from '$lib/stores/app';
-import { get } from 'svelte/store';
 
 const { Parser } = pkg as any;
 let tables: Table[] = [];
@@ -181,7 +179,7 @@ function parseCreateTable(ast: any, index: number, resetPositions: boolean = fal
   }
 
   let position;
-  const existingTable = get(schema).tables.find(
+  const existingTable = tables.find(
     (t) => t.name.toLowerCase() === tableName.toLowerCase()
   );
   if (resetPositions) position = calculateDynamicPosition(tableName, foreignKeys, index);
