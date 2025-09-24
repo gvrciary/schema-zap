@@ -27,12 +27,6 @@
   }
 }
 
-@media (prefers-contrast: high) {
-  * {
-    border-color: currentColor;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
