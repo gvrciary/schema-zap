@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { SQLDialect } from '$lib/types';
   import { SQL_EXAMPLES } from '$lib/constants';
-  import { RotateCcw, AlertCircle, CheckCircle, Database } from 'lucide-svelte';
+  import { RotateCcw, CircleAlert, Check, Database } from 'lucide-svelte';
   import Button from '$lib/components/ui/button.svelte';
   import CopyButton from '$lib/components/ui/copy-button.svelte';
   import DeleteButton from '$lib/components/ui/delete-button.svelte';
@@ -144,10 +144,10 @@
     >
       <div class="flex min-w-0 flex-1 items-center gap-2 text-xs">
         {#if isParsingError}
-          <AlertCircle class="h-4 w-4 flex-shrink-0 text-red-500 dark:text-red-400" />
+          <CircleAlert class="h-4 w-4 flex-shrink-0 text-red-500 dark:text-red-400" />
           <span class="truncate text-gray-600 dark:text-gray-300">{errorMessage}</span>
         {:else if isValidSQL}
-          <CheckCircle class="h-4 w-4 flex-shrink-0 text-green-500 dark:text-green-400" />
+          <Check class="h-4 w-4 flex-shrink-0 text-green-500 dark:text-green-400" />
           <span class="text-gray-600 dark:text-gray-300">Valid SQL</span>
         {:else}
           <span class="text-gray-600 dark:text-gray-300">Enter Schema SQL</span>
