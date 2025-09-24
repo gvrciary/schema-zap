@@ -30,40 +30,38 @@
     </Button>
 
     <div class="flex h-full flex-col">
-      <div
-        class="flex-shrink-0 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-[#111111]"
+      <nav
+        class="flex border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-[#111111]"
       >
-        <nav class="flex">
-          <Button
-            onClick={() => setActiveTab('sql')}
-            class={cn(
-              'flex-1 cursor-pointer border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150',
-              activeTab === 'sql'
-                ? 'border-white bg-white text-gray-600 dark:bg-[#111111] dark:text-white'
-                : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#111] dark:hover:text-gray-300'
-            )}
-          >
-            <div class="flex items-center justify-center gap-2">
-              <Code class="h-4 w-4" />
-              <span>SQL Editor</span>
-            </div>
-          </Button>
-          <Button
-            onClick={() => setActiveTab('visual')}
-            class={cn(
-              'flex-1 cursor-pointer border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150',
-              activeTab === 'visual'
-                ? 'border-white bg-white text-gray-600 dark:bg-[#111111] dark:text-white'
-                : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#111] dark:hover:text-gray-300'
-            )}
-          >
-            <div class="flex items-center justify-center gap-2">
-              <Settings class="h-4 w-4" />
-              <span>Visual Editor</span>
-            </div>
-          </Button>
-        </nav>
-      </div>
+        <Button
+          onClick={() => setActiveTab('sql')}
+          class={cn(
+            'flex-1 cursor-pointer border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150',
+            activeTab === 'sql'
+              ? 'border-gray-700 bg-white text-gray-600 dark:bg-[#111111] dark:text-white'
+              : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#111] dark:hover:text-gray-300'
+          )}
+        >
+          <div class="flex items-center justify-center gap-2">
+            <Code class="h-4 w-4" />
+            <span>SQL Editor</span>
+          </div>
+        </Button>
+        <Button
+          onClick={() => setActiveTab('visual')}
+          class={cn(
+            'flex-1 cursor-pointer border-b-2 px-4 py-3 text-sm font-medium transition-colors duration-150',
+            activeTab === 'visual'
+              ? 'border-gray-700 bg-white text-gray-600 dark:bg-[#111111] dark:text-white'
+              : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#111] dark:hover:text-gray-300'
+          )}
+        >
+          <div class="flex items-center justify-center gap-2">
+            <Settings class="h-4 w-4" />
+            <span>Visual Editor</span>
+          </div>
+        </Button>
+      </nav>
 
       <div class="h-full flex-1 overflow-hidden bg-white/90 p-4 dark:bg-[#111111]">
         {#if activeTab === 'sql'}

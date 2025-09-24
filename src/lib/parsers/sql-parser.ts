@@ -1,8 +1,8 @@
-import pkg from 'node-sql-parser';
+import pkg  from 'node-sql-parser';
 import { SQLDialect } from '$lib/types';
 import type { Table, Column, Relationship, ParseResult } from '$lib/types';
+import { cleanSQL, isCreateTableStatement } from '$lib/utils/validators';
 
-const { Parser } = pkg as any;
 let tables: Table[] = [];
 
 export function parseSQL(
@@ -24,7 +24,7 @@ export function parseSQL(
   tables = [];
   const relationships: Relationship[] = [];
   let tableCounter = 0;
-  const parser = new Parser();
+  const parser = new pkg.Parser();
 
   for (const statement of statements) {
     statementCount++;
@@ -72,14 +72,6 @@ export function parseSQL(
   return result;
 }
 
-function cleanSQL(sql: string): string {
-  return sql
-    .replace(/--.*$/gm, '')
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
 function splitStatements(sql: string): string[] {
   const statements: string[] = [];
   let current = '';
@@ -115,10 +107,6 @@ function splitStatements(sql: string): string[] {
   }
 
   return statements.filter((stmt) => stmt.length > 0);
-}
-
-function isCreateTableStatement(statement: string): boolean {
-  return /^\s*create\s+(temporary\s+)?table\s+(if\s+not\s+exists\s+)?/i.test(statement);
 }
 
 function parseCreateTable(ast: any, index: number, resetPositions: boolean = false): Table | null {
@@ -179,9 +167,7 @@ function parseCreateTable(ast: any, index: number, resetPositions: boolean = fal
   }
 
   let position;
-  const existingTable = tables.find(
-    (t) => t.name.toLowerCase() === tableName.toLowerCase()
-  );
+  const existingTable = tables.find((t) => t.name.toLowerCase() === tableName.toLowerCase());
   if (resetPositions) position = calculateDynamicPosition(tableName, foreignKeys, index);
   else if (existingTable) position = existingTable.position;
   else position = calculateDynamicPosition(tableName, foreignKeys, index);

@@ -18,6 +18,8 @@ Thumbs.db
 !.env.example
 !.env.test
 
+pnpm-lock.yaml
+
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*

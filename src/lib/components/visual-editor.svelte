@@ -12,17 +12,18 @@
   import { generateSQLFromSchema } from '$lib/utils/sql-generator';
   import { extractTypeAndLength } from '$lib/utils/column-helpers';
   import { canHaveLength, requiresLength } from '$lib/utils/validators';
-  import { 
-    createDragState, 
+  import {
+    createDragState,
     resetDragState,
     handleTableDragStart,
     handleTableDragOver,
     handleTableDrop,
     handleColumnDragStart,
     handleColumnDragOver,
-    handleColumnDrop,
+    handleColumnDrop
   } from '$lib/utils/drag-drop';
   import type { DragState } from '$lib/types';
+  import { SvelteSet } from 'svelte/reactivity';
 
   let visualTables: Table[] = $state([]);
   let expandedTables: Set<string> = $state(new Set());
@@ -57,7 +58,7 @@
       updateSQLAndSchema(false, false, false);
 
       visualTables = [...$schema.tables];
-      const newExpanded = new Set<string>();
+      const newExpanded = new SvelteSet<string>();
       for (const table of visualTables) {
         if (table.columns.length > 0) {
           newExpanded.add(table.name);
@@ -81,7 +82,6 @@
       columnForm.length = undefined;
     }
   });
-
 
   function updateSQLAndSchema(
     resetZoom: boolean = false,
@@ -165,7 +165,7 @@
 
   function removeTable(tableName: string): void {
     visualTables = visualTables.filter((t) => t.name !== tableName);
-    const newExpanded = new Set(expandedTables);
+    const newExpanded = new SvelteSet(expandedTables);
     newExpanded.delete(tableName);
     expandedTables = newExpanded;
 
@@ -205,8 +205,6 @@
     showColumnForm = true;
   }
 
-
-
   function initEditColumnForm(tableName: string, column: Column): void {
     const { baseType, length } = extractTypeAndLength(column.type);
 
@@ -230,7 +228,11 @@
   function saveColumn(): void {
     if (!columnForm.name.trim() || !columnForm.type) return;
 
-    if (requiresLength(columnForm.type, $selectedDialect) && (!columnForm.length || columnForm.length <= 0)) return;
+    if (
+      requiresLength(columnForm.type, $selectedDialect) &&
+      (!columnForm.length || columnForm.length <= 0)
+    )
+      return;
 
     const tableIndex = visualTables.findIndex((t) => t.name === columnForm.tableName);
     if (tableIndex === -1) return;
@@ -303,7 +305,7 @@
   }
 
   function toggleTableExpansion(tableName: string): void {
-    const newExpanded = new Set(expandedTables);
+    const newExpanded = new SvelteSet(expandedTables);
     if (newExpanded.has(tableName)) {
       newExpanded.delete(tableName);
     } else {
@@ -311,8 +313,6 @@
     }
     expandedTables = newExpanded;
   }
-
-
 
   function clearAll(): void {
     visualTables = [];
@@ -435,13 +435,13 @@
             onRemoveTable={removeTable}
             onEditColumn={initEditColumnForm}
             onRemoveColumn={removeColumn}
-            onTableDragStart={onTableDragStart}
-            onTableDragOver={onTableDragOver}
-            onTableDrop={onTableDrop}
-            onColumnDragStart={onColumnDragStart}
-            onColumnDragOver={onColumnDragOver}
-            onColumnDrop={onColumnDrop}
-            onDragEnd={onDragEnd}
+            {onTableDragStart}
+            {onTableDragOver}
+            {onTableDrop}
+            {onColumnDragStart}
+            {onColumnDragOver}
+            {onColumnDrop}
+            {onDragEnd}
           />
         {/each}
       </div>

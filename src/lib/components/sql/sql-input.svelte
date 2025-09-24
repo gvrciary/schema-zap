@@ -288,34 +288,6 @@
 </div>
 
 <style>
-  #sql-textarea::-webkit-scrollbar,
-  pre::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  #sql-textarea::-webkit-scrollbar-track,
-  pre::-webkit-scrollbar-track {
-    background: #f8fafc;
-    border-radius: 4px;
-  }
-
-  #sql-textarea::-webkit-scrollbar-thumb,
-  pre::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-  }
-
-  #sql-textarea::-webkit-scrollbar-thumb:hover,
-  pre::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-  }
-
-  #sql-textarea::-webkit-scrollbar-corner,
-  pre::-webkit-scrollbar-corner {
-    background: #f8fafc;
-  }
-
   #sql-textarea:focus {
     outline: none;
     box-shadow: inset 0 0 0 2px #6b7280;
@@ -516,5 +488,55 @@
 
   #sql-textarea:focus:not(:placeholder-shown) {
     color: rgba(55, 65, 81, 0.1);
+  }
+
+  #sql-textarea::-webkit-scrollbar,
+  pre::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  #sql-textarea::-webkit-scrollbar-track,
+  pre::-webkit-scrollbar-track {
+    background: rgba(248, 250, 252, 0.8);
+    border-radius: 4px;
+  }
+
+  #sql-textarea::-webkit-scrollbar-thumb,
+  pre::-webkit-scrollbar-thumb {
+    background: rgba(203, 213, 225, 0.8);
+    border-radius: 4px;
+    border: 1px solid rgba(248, 250, 252, 0.5);
+  }
+
+  #sql-textarea::-webkit-scrollbar-thumb:hover,
+  pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.9);
+  }
+
+  #sql-textarea::-webkit-scrollbar-corner,
+  pre::-webkit-scrollbar-corner {
+    background: rgba(248, 250, 252, 0.8);
+  }
+
+  :global(.dark) #sql-textarea::-webkit-scrollbar-track,
+  :global(.dark) pre::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.8);
+  }
+
+  :global(.dark) #sql-textarea::-webkit-scrollbar-thumb,
+  :global(.dark) pre::-webkit-scrollbar-thumb {
+    background: rgba(75, 85, 99, 0.8);
+    border: 1px solid rgba(31, 41, 55, 0.5);
+  }
+
+  :global(.dark) #sql-textarea::-webkit-scrollbar-thumb:hover,
+  :global(.dark) pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(107, 114, 128, 0.9);
+  }
+
+  :global(.dark) #sql-textarea::-webkit-scrollbar-corner,
+  :global(.dark) pre::-webkit-scrollbar-corner {
+    background: rgba(31, 41, 55, 0.8);
   }
 </style>

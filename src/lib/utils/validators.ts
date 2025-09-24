@@ -1,6 +1,18 @@
 import { SQLDialect, type Table } from '$lib/types';
 import { REQUIRED_LENGTH_TYPES, OPTIONAL_LENGTH_TYPES } from '$lib/constants';
 
+export function cleanSQL(sql: string): string {
+  return sql
+    .replace(/--.*$/gm, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function isCreateTableStatement(statement: string): boolean {
+  return /^\s*create\s+(temporary\s+)?table\s+(if\s+not\s+exists\s+)?/i.test(statement);
+}
+
 export function isValidTableName(name: string, visualTables: Table[]): boolean {
   if (!name.trim()) return false;
   if (visualTables.some((t) => t.name.toLowerCase() === name.trim().toLowerCase())) return false;
